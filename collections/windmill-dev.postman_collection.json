@@ -1,0 +1,367 @@
+{
+  "info": {
+    "name": "Windmill API",
+    "description": "Representative subset of the Windmill REST API - the same surface used by the Windmill CLI (wmill) and web UI. Windmill is an open-source developer platform (github.com/windmill-labs/windmill) that runs as Windmill Cloud or self-hosted. Base URL: https://app.windmill.dev/api (Cloud) or http(s)://your-host/api (self-hosted). Most resources are scoped under /w/{workspace}. Requests are authenticated with a Bearer token or session cookie.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      { "key": "token", "value": "{{bearerToken}}", "type": "string" }
+    ]
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "https://app.windmill.dev/api", "type": "string" },
+    { "key": "workspace", "value": "", "type": "string" },
+    { "key": "bearerToken", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Scripts",
+      "item": [
+        {
+          "name": "List scripts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/w/{{workspace}}/scripts/list", "host": ["{{baseUrl}}"], "path": ["w", "{{workspace}}", "scripts", "list"] },
+            "description": "Lists scripts in a workspace."
+          }
+        },
+        {
+          "name": "Create a script",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"path\": \"u/user/my_script\",\n  \"summary\": \"My script\",\n  \"content\": \"def main():\\n    return 'hello'\",\n  \"language\": \"python3\"\n}" },
+            "url": { "raw": "{{baseUrl}}/w/{{workspace}}/scripts/create", "host": ["{{baseUrl}}"], "path": ["w", "{{workspace}}", "scripts", "create"] },
+            "description": "Creates a new script or a new version of an existing path."
+          }
+        },
+        {
+          "name": "Get a script by path",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/w/{{workspace}}/scripts/get/p/:path", "host": ["{{baseUrl}}"], "path": ["w", "{{workspace}}", "scripts", "get", "p", ":path"], "variable": [{ "key": "path", "value": "" }] },
+            "description": "Retrieves the latest version of a script at the given path."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Flows",
+      "item": [
+        {
+          "name": "List flows",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/w/{{workspace}}/flows/list", "host": ["{{baseUrl}}"], "path": ["w", "{{workspace}}", "flows", "list"] },
+            "description": "Lists flows in a workspace."
+          }
+        },
+        {
+          "name": "Create a flow",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"path\": \"f/team/my_flow\",\n  \"summary\": \"My flow\",\n  \"value\": { \"modules\": [] }\n}" },
+            "url": { "raw": "{{baseUrl}}/w/{{workspace}}/flows/create", "host": ["{{baseUrl}}"], "path": ["w", "{{workspace}}", "flows", "create"] },
+            "description": "Creates a new flow."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Apps",
+      "item": [
+        {
+          "name": "List apps",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/w/{{workspace}}/apps/list", "host": ["{{baseUrl}}"], "path": ["w", "{{workspace}}", "apps", "list"] },
+            "description": "Lists low-code apps in a workspace."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Jobs",
+      "item": [
+        {
+          "name": "Run a script by path",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": { "raw": "{{baseUrl}}/w/{{workspace}}/jobs/run/p/:path", "host": ["{{baseUrl}}"], "path": ["w", "{{workspace}}", "jobs", "run", "p", ":path"], "variable": [{ "key": "path", "value": "" }] },
+            "description": "Enqueues a job to run the script at the given path and returns the job UUID."
+          }
+        },
+        {
+          "name": "Run a script and wait for result",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": { "raw": "{{baseUrl}}/w/{{workspace}}/jobs/run_wait_result/p/:path", "host": ["{{baseUrl}}"], "path": ["w", "{{workspace}}", "jobs", "run_wait_result", "p", ":path"], "variable": [{ "key": "path", "value": "" }] },
+            "description": "Runs the script synchronously and returns its result."
+          }
+        },
+        {
+          "name": "List jobs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/w/{{workspace}}/jobs/list", "host": ["{{baseUrl}}"], "path": ["w", "{{workspace}}", "jobs", "list"] },
+            "description": "Lists queued, running, and completed jobs."
+          }
+        },
+        {
+          "name": "Get a job",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/w/{{workspace}}/jobs_u/get/:id", "host": ["{{baseUrl}}"], "path": ["w", "{{workspace}}", "jobs_u", "get", ":id"], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Retrieves a job by its UUID."
+          }
+        },
+        {
+          "name": "Cancel a job",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": { "raw": "{{baseUrl}}/w/{{workspace}}/jobs_u/queue/cancel/:id", "host": ["{{baseUrl}}"], "path": ["w", "{{workspace}}", "jobs_u", "queue", "cancel", ":id"], "variable": [{ "key": "id", "value": "" }] },
+            "description": "Cancels a queued or running job."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Schedules",
+      "item": [
+        {
+          "name": "List schedules",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/w/{{workspace}}/schedules/list", "host": ["{{baseUrl}}"], "path": ["w", "{{workspace}}", "schedules", "list"] },
+            "description": "Lists cron schedules in a workspace."
+          }
+        },
+        {
+          "name": "Create a schedule",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"path\": \"u/user/nightly\",\n  \"schedule\": \"0 0 * * *\",\n  \"script_path\": \"u/user/my_script\",\n  \"is_flow\": false,\n  \"enabled\": true\n}" },
+            "url": { "raw": "{{baseUrl}}/w/{{workspace}}/schedules/create", "host": ["{{baseUrl}}"], "path": ["w", "{{workspace}}", "schedules", "create"] },
+            "description": "Creates a cron schedule for a script or flow path."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Variables",
+      "item": [
+        {
+          "name": "List variables",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/w/{{workspace}}/variables/list", "host": ["{{baseUrl}}"], "path": ["w", "{{workspace}}", "variables", "list"] },
+            "description": "Lists workspace variables (secret values redacted)."
+          }
+        },
+        {
+          "name": "Create a variable",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"path\": \"u/user/api_key\",\n  \"value\": \"secret\",\n  \"is_secret\": true\n}" },
+            "url": { "raw": "{{baseUrl}}/w/{{workspace}}/variables/create", "host": ["{{baseUrl}}"], "path": ["w", "{{workspace}}", "variables", "create"] },
+            "description": "Creates a workspace variable or secret."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Resources",
+      "item": [
+        {
+          "name": "List resources",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/w/{{workspace}}/resources/list", "host": ["{{baseUrl}}"], "path": ["w", "{{workspace}}", "resources", "list"] },
+            "description": "Lists typed resource objects in a workspace."
+          }
+        },
+        {
+          "name": "Create a resource",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"path\": \"u/user/my_pg\",\n  \"resource_type\": \"postgresql\",\n  \"value\": {}\n}" },
+            "url": { "raw": "{{baseUrl}}/w/{{workspace}}/resources/create", "host": ["{{baseUrl}}"], "path": ["w", "{{workspace}}", "resources", "create"] },
+            "description": "Creates a typed resource object."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Workspaces",
+      "item": [
+        {
+          "name": "List workspaces",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/workspaces/list", "host": ["{{baseUrl}}"], "path": ["workspaces", "list"] },
+            "description": "Lists workspaces visible to the authenticated user."
+          }
+        },
+        {
+          "name": "Create a workspace",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"id\": \"my-workspace\",\n  \"name\": \"My Workspace\"\n}" },
+            "url": { "raw": "{{baseUrl}}/workspaces/create", "host": ["{{baseUrl}}"], "path": ["workspaces", "create"] },
+            "description": "Creates a new workspace (tenant)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Who am I (global)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/users/whoami", "host": ["{{baseUrl}}"], "path": ["users", "whoami"] },
+            "description": "Returns the globally authenticated user."
+          }
+        },
+        {
+          "name": "List workspace users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/w/{{workspace}}/users/list", "host": ["{{baseUrl}}"], "path": ["w", "{{workspace}}", "users", "list"] },
+            "description": "Lists users who are members of the workspace."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Groups",
+      "item": [
+        {
+          "name": "List groups",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/w/{{workspace}}/groups/list", "host": ["{{baseUrl}}"], "path": ["w", "{{workspace}}", "groups", "list"] },
+            "description": "Lists user groups in a workspace."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Folders",
+      "item": [
+        {
+          "name": "List folders",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/w/{{workspace}}/folders/list", "host": ["{{baseUrl}}"], "path": ["w", "{{workspace}}", "folders", "list"] },
+            "description": "Lists folders in a workspace."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Audit",
+      "item": [
+        {
+          "name": "List audit logs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/w/{{workspace}}/audit/list", "host": ["{{baseUrl}}"], "path": ["w", "{{workspace}}", "audit", "list"] },
+            "description": "Lists audit log entries (admin only, Enterprise Edition)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Workers",
+      "item": [
+        {
+          "name": "List workers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/workers/list", "host": ["{{baseUrl}}"], "path": ["workers", "list"] },
+            "description": "Lists active workers in the fleet."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Triggers",
+      "item": [
+        {
+          "name": "List HTTP triggers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/w/{{workspace}}/http_triggers/list", "host": ["{{baseUrl}}"], "path": ["w", "{{workspace}}", "http_triggers", "list"] },
+            "description": "Lists HTTP route triggers."
+          }
+        },
+        {
+          "name": "List WebSocket triggers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/w/{{workspace}}/websocket_triggers/list", "host": ["{{baseUrl}}"], "path": ["w", "{{workspace}}", "websocket_triggers", "list"] },
+            "description": "Lists WebSocket triggers. Windmill connects OUT to an external WebSocket server; this is not a Windmill-hosted WebSocket API."
+          }
+        },
+        {
+          "name": "Create a WebSocket trigger",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"path\": \"u/user/my_ws\",\n  \"url\": \"wss://example.com/stream\",\n  \"script_path\": \"u/user/on_message\",\n  \"is_flow\": false,\n  \"enabled\": true\n}" },
+            "url": { "raw": "{{baseUrl}}/w/{{workspace}}/websocket_triggers/create", "host": ["{{baseUrl}}"], "path": ["w", "{{workspace}}", "websocket_triggers", "create"] },
+            "description": "Creates a WebSocket trigger that connects to an external WebSocket server and runs a runnable per message."
+          }
+        }
+      ]
+    },
+    {
+      "name": "OIDC",
+      "item": [
+        {
+          "name": "Generate an OIDC token",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"audience\": \"aws\"\n}" },
+            "url": { "raw": "{{baseUrl}}/w/{{workspace}}/oidc/token", "host": ["{{baseUrl}}"], "path": ["w", "{{workspace}}", "oidc", "token"] },
+            "description": "Mints a short-lived OIDC (JWT) token (Enterprise Edition)."
+          }
+        }
+      ]
+    }
+  ]
+}

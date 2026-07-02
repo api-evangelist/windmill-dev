@@ -1,0 +1,197 @@
+specification: API Commons Plans
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/Plans
+provider: Windmill
+providerId: windmill-dev
+created: '2026-07-02'
+modified: '2026-07-02'
+reconciled: false
+tags:
+- Developer Platform
+- Workflows
+- Internal Tools
+- Open Source
+- Plans
+description: >-
+  Windmill has an open-source Community Edition (AGPL) that is free to
+  self-host, plus paid Enterprise Edition tiers available on both Windmill Cloud
+  and self-hosted. Paid pricing (revised in early 2026) is a combination of
+  Compute Units and Seats. A Compute Unit (CU) equals roughly 2 worker-GB-month
+  of execution capacity - a standard worker with a 2 GB memory limit is 2 CU.
+  Seats are billed per active user, with operator users (who can only execute
+  scripts, flows, and apps, not author them) counted as half a seat, and
+  external JWT users also counted as fractional seats. The REST API itself has
+  no separate fee - it is the same surface the CLI and UI use, governed by the
+  plan's compute and seat entitlements. Exact per-unit rates should be verified
+  on the Windmill pricing page during reconciliation.
+notes: >-
+  The Community Edition free tier caps SSO users, workspaces, groups, and daily
+  emails but allows unlimited executions bounded by your own hardware.
+  Enterprise adds SSO/SAML with group sync, audit logs, agent workers, approval
+  steps, multiplayer editing, distributed S3 dependency cache, and 24/7 support.
+  Verify current CU and seat prices on the pricing page.
+sources:
+- https://www.windmill.dev/pricing
+- https://www.windmill.dev/docs
+- https://www.windmill.dev/changelog/new-pricing
+- https://github.com/windmill-labs/windmill
+plans:
+- id: windmill-community
+  name: Community Edition (Open Source, Self-Hosted)
+  type: free
+  description: >-
+    The full Windmill platform, AGPL-licensed and self-hostable via Docker/Helm.
+    Unlimited executions bounded only by your own infrastructure. Includes
+    scripts, flows, apps, schedules, variables, resources, and basic triggers
+    (HTTP, WebSocket, Postgres, MQTT, and more). Some enterprise capabilities
+    (audit logs, agent workers, approval steps, multiplayer editing, SSO/SAML)
+    are not included.
+  entries:
+  - label: Executions
+    name: community_executions
+    type: usage
+    metric: executions
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: free (self-hosted; you provide infrastructure)
+    userMultiplied: false
+  - label: SSO Users
+    name: community_sso_users
+    type: quota
+    metric: users
+    limit: 10
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: free
+    userMultiplied: false
+  elements:
+  - name: Scripts, Flows, and Apps
+  - name: Schedules and Cron
+  - name: Basic Triggers
+  - name: Full REST API and CLI
+  - name: Up to 3 Workspaces
+- id: windmill-cloud-free
+  name: Windmill Cloud - Free
+  type: free
+  description: >-
+    Managed Windmill Cloud free tier for evaluation and small teams, with a
+    bounded number of seats and workspaces and unlimited executions.
+  entries:
+  - label: Executions
+    name: cloud_free_executions
+    type: usage
+    metric: executions
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: $0
+    userMultiplied: false
+  elements:
+  - name: Managed Hosting
+  - name: Scripts, Flows, and Apps
+  - name: Community Triggers
+- id: windmill-enterprise-seat
+  name: Enterprise - Seats
+  type: subscription
+  description: >-
+    Per-seat licensing for Enterprise Edition (Cloud or self-hosted). Developer
+    seats can author and execute; operator seats can only execute and are
+    counted as half a seat; external JWT users are counted as fractional seats.
+  entries:
+  - label: Developer Seat
+    name: developer_seat
+    type: flat
+    metric: seats
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: per developer seat / month (see pricing page)
+    userMultiplied: true
+  - label: Operator Seat
+    name: operator_seat
+    type: flat
+    metric: seats
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: half of a developer seat / month (execute-only)
+    userMultiplied: true
+  elements:
+  - name: SSO / SAML with Group Sync
+  - name: Audit Logs
+  - name: Approval Steps and Multiplayer Editing
+  - name: Commercial License
+  - name: 24/7 Priority Support
+- id: windmill-enterprise-compute
+  name: Enterprise - Compute Units
+  type: usage
+  description: >-
+    Compute capacity for Enterprise Edition, billed per Compute Unit. A Compute
+    Unit is roughly 2 worker-GB-month; a standard worker with a 2 GB memory
+    limit is 2 CU. Native subworkers and agent workers are priced separately.
+  entries:
+  - label: Standard Worker Compute
+    name: standard_worker_cu
+    type: usage
+    metric: compute_units
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 2
+    price: per 2-CU standard worker group / month (see pricing page)
+    userMultiplied: false
+  - label: Native Subworker
+    name: native_subworker
+    type: usage
+    metric: compute_units
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: per native subworker / month (see pricing page)
+    userMultiplied: false
+  - label: Agent Worker
+    name: agent_worker
+    type: usage
+    metric: compute_units
+    limit: -1
+    timeFrame: month
+    geo: global
+    unit: 1
+    price: per agent worker / month (see pricing page)
+    userMultiplied: false
+  elements:
+  - name: Distributed Worker Groups
+  - name: Flexible Worker Memory (1 GB / 2 GB / >2 GB)
+  - name: Distributed S3 Dependency Cache
+- id: windmill-enterprise-custom
+  name: Enterprise / Custom
+  type: enterprise
+  description: >-
+    Negotiated agreements for large deployments - dedicated infrastructure, SLA
+    guarantees, security reviews, and premium support. Available on Cloud and
+    self-hosted (including via AWS Marketplace). Contact Windmill.
+  entries:
+  - label: Enterprise Agreement
+    name: enterprise
+    type: flat
+    metric: contract
+    limit: -1
+    timeFrame: year
+    geo: global
+    unit: 1
+    price: contact sales
+    userMultiplied: false
+  elements:
+  - name: Dedicated Infrastructure
+  - name: SLA Guarantees
+  - name: Security Reviews and Premium Support
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

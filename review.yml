@@ -1,0 +1,124 @@
+aid: windmill-dev
+name: Windmill
+review:
+  question: Does Windmill expose a documented public WebSocket API?
+  answer: false
+  date: '2026-07-02'
+  reviewer: API Evangelist
+  asyncapiSpecCreated: false
+  asyncapiScopeNote: |
+    No AsyncAPI document was authored. Windmill's own public surface (the REST
+    API used by the CLI and UI) is request/response HTTPS - there is no
+    Windmill-hosted server-push transport (WebSocket or SSE) documented as a
+    public API to model. Windmill does have a "WebSocket trigger" feature, but
+    the direction is inverted: Windmill connects OUT to an external WebSocket
+    server as an event source and runs a script/flow per message. That is
+    Windmill acting as a WebSocket CLIENT/consumer of a third-party endpoint,
+    not Windmill exposing its own WebSocket API for clients to connect into, so
+    there is nothing on Windmill's own API to describe in AsyncAPI.
+findings:
+  summary: |
+    Windmill does not publish a documented public WebSocket API. Windmill is an
+    open-source developer platform (scripts, flows, apps, schedules, jobs) that
+    runs as Windmill Cloud (base https://app.windmill.dev/api) or self-hosted
+    (base http(s)://your-host/api). Its public surface is a single, large REST
+    API (OpenAPI served live at GET /openapi.yaml, version 1.745.0 at review
+    time), authenticated with a Bearer token or a session cookie, with almost
+    every resource scoped under /w/{workspace}. Job execution is done by POSTing
+    to run endpoints and then either polling job status (fire-and-forget) or
+    using run_wait_result to block for the result - request/response over HTTPS,
+    not a socket. Windmill's "WebSocket trigger" connects Windmill outward to an
+    external WebSocket server and runs a runnable on each received message; it
+    is an outbound consumer, not a Windmill-hosted WebSocket endpoint. No
+    realtime, bidirectional, or streaming WebSocket (ws:// or wss://) endpoint
+    is documented on Windmill's own API.
+  openSource: |
+    The core Windmill platform is open source (AGPL) and self-hostable via
+    Docker/Helm (github.com/windmill-labs/windmill). A managed Windmill Cloud
+    offering and an Enterprise Edition (Cloud or self-hosted) also exist. The
+    REST API is the same surface used by the Windmill CLI (wmill) and the web
+    UI; resources can also be synced from git.
+  transports:
+    - protocol: REST
+      scheme: https
+      baseURL: https://app.windmill.dev/api
+      documented: true
+      note: The full public API. Self-hosted base is http(s)://your-host/api. Bearer token or cookie auth.
+    - protocol: Webhook
+      scheme: https
+      documented: true
+      note: Every script and flow can be triggered by an inbound HTTP webhook; HTTP route triggers also invoke runnables on inbound requests. Server receives HTTP, not WebSocket.
+    - protocol: WebSocket (trigger, outbound)
+      scheme: wss
+      documented: true
+      note: Windmill's WebSocket trigger connects OUT to an external WebSocket server as an event source. Windmill is the client here; it does NOT expose its own WebSocket API.
+    - protocol: WebSocket (Windmill-hosted API)
+      scheme: wss
+      documented: false
+      note: No Windmill-hosted WebSocket endpoint for clients to connect into is documented anywhere in the API reference as of the review date.
+  endpointsConfirmedRest:
+    - GET  https://app.windmill.dev/api/version
+    - GET  https://app.windmill.dev/api/w/{workspace}/scripts/list
+    - POST https://app.windmill.dev/api/w/{workspace}/scripts/create
+    - GET  https://app.windmill.dev/api/w/{workspace}/flows/list
+    - POST https://app.windmill.dev/api/w/{workspace}/flows/create
+    - GET  https://app.windmill.dev/api/w/{workspace}/apps/list
+    - POST https://app.windmill.dev/api/w/{workspace}/jobs/run/script/{hash}
+    - GET  https://app.windmill.dev/api/w/{workspace}/jobs/list
+    - GET  https://app.windmill.dev/api/w/{workspace}/schedules/list
+    - POST https://app.windmill.dev/api/w/{workspace}/schedules/create
+    - GET  https://app.windmill.dev/api/w/{workspace}/variables/list
+    - POST https://app.windmill.dev/api/w/{workspace}/variables/create
+    - GET  https://app.windmill.dev/api/w/{workspace}/resources/list
+    - POST https://app.windmill.dev/api/w/{workspace}/resources/create
+    - GET  https://app.windmill.dev/api/w/{workspace}/groups/list
+    - GET  https://app.windmill.dev/api/w/{workspace}/folders/list
+    - GET  https://app.windmill.dev/api/w/{workspace}/audit/list
+    - GET  https://app.windmill.dev/api/w/{workspace}/audit/get/{id}
+    - GET  https://app.windmill.dev/api/workspaces/list
+    - POST https://app.windmill.dev/api/workspaces/create
+    - GET  https://app.windmill.dev/api/users/whoami
+  endpointsModeledRest:
+    - POST https://app.windmill.dev/api/w/{workspace}/jobs/run/p/{path}
+    - POST https://app.windmill.dev/api/w/{workspace}/jobs/run_wait_result/p/{path}
+    - POST https://app.windmill.dev/api/w/{workspace}/jobs/run/f/{path}
+    - GET  https://app.windmill.dev/api/w/{workspace}/jobs_u/get/{id}
+    - POST https://app.windmill.dev/api/w/{workspace}/jobs_u/queue/cancel/{id}
+    - GET  https://app.windmill.dev/api/w/{workspace}/http_triggers/list
+    - GET  https://app.windmill.dev/api/w/{workspace}/websocket_triggers/list
+    - POST https://app.windmill.dev/api/w/{workspace}/websocket_triggers/create
+    - GET  https://app.windmill.dev/api/w/{workspace}/kafka_triggers/list
+    - GET  https://app.windmill.dev/api/w/{workspace}/postgres_triggers/list
+    - GET  https://app.windmill.dev/api/workers/list
+    - POST https://app.windmill.dev/api/w/{workspace}/oidc/token
+sources:
+  - url: https://app.windmill.dev/openapi.html
+    type: APIReference
+    note: Live Windmill API reference (OpenAPI 1.745.0). All documented endpoints are HTTPS REST; no WebSocket API.
+  - url: https://raw.githubusercontent.com/windmill-labs/windmill/main/backend/windmill-api/openapi.yaml
+    type: OpenAPI
+    note: Source OpenAPI. Bearer + cookie auth, base /api, workspace-scoped /w/{workspace} paths. Confirmed scripts, flows, apps, jobs, schedules, variables, resources, groups, folders, audit, workspaces, users endpoints.
+  - url: https://www.windmill.dev/docs/core_concepts/websocket_triggers
+    type: Documentation
+    note: Docs state Windmill can connect to WebSocket servers and trigger runnables when a message is received - an outbound consumer, not a hosted WebSocket API.
+  - url: https://www.windmill.dev/docs/getting_started/triggers
+    type: Documentation
+    note: Trigger family - HTTP routes, WebSocket, Kafka, NATS, Postgres, SQS, MQTT, email, schedules, webhooks. All either inbound HTTP or outbound consumers.
+  - url: https://www.windmill.dev/docs/core_concepts/jobs
+    type: Documentation
+    note: Jobs are run via REST and polled or awaited via run_wait_result; no socket transport.
+  - url: https://github.com/windmill-labs/windmill
+    type: SourceCode
+    note: Open-source (AGPL) developer platform, self-hostable via Docker/Helm.
+actions:
+  asyncapiPath: null
+  apisYmlUpdated: true
+  reason: |
+    No Windmill-hosted WebSocket protocol surface exists. Windmill's own public
+    API is request/response REST (used by the CLI and UI), with job execution
+    done via run/poll or run_wait_result. The "WebSocket trigger" is Windmill
+    consuming an EXTERNAL WebSocket server as an event source (Windmill is the
+    client), not Windmill exposing a WebSocket API. No AsyncAPI document was
+    created because there is no server-push transport on Windmill's own API to
+    model; the WebSocket direction that exists points outward to third-party
+    endpoints that carry their own protocols.

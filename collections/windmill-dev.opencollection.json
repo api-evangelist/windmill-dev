@@ -1,0 +1,235 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Windmill API",
+    "version": "1.745.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": { "name": "Scripts", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List scripts.", "type": "http" },
+          "http": { "method": "GET", "url": "https://app.windmill.dev/api/w/:workspace/scripts/list", "params": [{ "name": "workspace", "value": "", "type": "path", "description": "The workspace id." }] },
+          "docs": "Lists scripts in a workspace."
+        },
+        {
+          "info": { "name": "Create a script.", "type": "http" },
+          "http": { "method": "POST", "url": "https://app.windmill.dev/api/w/:workspace/scripts/create", "params": [{ "name": "workspace", "value": "", "type": "path", "description": "The workspace id." }], "body": { "type": "json", "data": "{}" } },
+          "docs": "Creates a new script or a new version of an existing path."
+        },
+        {
+          "info": { "name": "Get a script by path.", "type": "http" },
+          "http": { "method": "GET", "url": "https://app.windmill.dev/api/w/:workspace/scripts/get/p/:path", "params": [{ "name": "workspace", "value": "", "type": "path", "description": "The workspace id." }, { "name": "path", "value": "", "type": "path", "description": "The script path." }] },
+          "docs": "Retrieves the latest version of a script at the given path."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Flows", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List flows.", "type": "http" },
+          "http": { "method": "GET", "url": "https://app.windmill.dev/api/w/:workspace/flows/list", "params": [{ "name": "workspace", "value": "", "type": "path", "description": "The workspace id." }] },
+          "docs": "Lists flows in a workspace."
+        },
+        {
+          "info": { "name": "Create a flow.", "type": "http" },
+          "http": { "method": "POST", "url": "https://app.windmill.dev/api/w/:workspace/flows/create", "params": [{ "name": "workspace", "value": "", "type": "path", "description": "The workspace id." }], "body": { "type": "json", "data": "{}" } },
+          "docs": "Creates a new flow."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Apps", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List apps.", "type": "http" },
+          "http": { "method": "GET", "url": "https://app.windmill.dev/api/w/:workspace/apps/list", "params": [{ "name": "workspace", "value": "", "type": "path", "description": "The workspace id." }] },
+          "docs": "Lists low-code apps in a workspace."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Jobs", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Run a script by path.", "type": "http" },
+          "http": { "method": "POST", "url": "https://app.windmill.dev/api/w/:workspace/jobs/run/p/:path", "params": [{ "name": "workspace", "value": "", "type": "path", "description": "The workspace id." }, { "name": "path", "value": "", "type": "path", "description": "The script path." }], "body": { "type": "json", "data": "{}" } },
+          "docs": "Enqueues a job to run the script at the given path and returns the job UUID."
+        },
+        {
+          "info": { "name": "Run a script and wait for result.", "type": "http" },
+          "http": { "method": "POST", "url": "https://app.windmill.dev/api/w/:workspace/jobs/run_wait_result/p/:path", "params": [{ "name": "workspace", "value": "", "type": "path", "description": "The workspace id." }, { "name": "path", "value": "", "type": "path", "description": "The script path." }], "body": { "type": "json", "data": "{}" } },
+          "docs": "Runs the script synchronously and returns its result."
+        },
+        {
+          "info": { "name": "List jobs.", "type": "http" },
+          "http": { "method": "GET", "url": "https://app.windmill.dev/api/w/:workspace/jobs/list", "params": [{ "name": "workspace", "value": "", "type": "path", "description": "The workspace id." }] },
+          "docs": "Lists queued, running, and completed jobs."
+        },
+        {
+          "info": { "name": "Get a job.", "type": "http" },
+          "http": { "method": "GET", "url": "https://app.windmill.dev/api/w/:workspace/jobs_u/get/:id", "params": [{ "name": "workspace", "value": "", "type": "path", "description": "The workspace id." }, { "name": "id", "value": "", "type": "path", "description": "The job UUID." }] },
+          "docs": "Retrieves a job by its UUID."
+        },
+        {
+          "info": { "name": "Cancel a job.", "type": "http" },
+          "http": { "method": "POST", "url": "https://app.windmill.dev/api/w/:workspace/jobs_u/queue/cancel/:id", "params": [{ "name": "workspace", "value": "", "type": "path", "description": "The workspace id." }, { "name": "id", "value": "", "type": "path", "description": "The job UUID." }], "body": { "type": "json", "data": "{}" } },
+          "docs": "Cancels a queued or running job."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Schedules", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List schedules.", "type": "http" },
+          "http": { "method": "GET", "url": "https://app.windmill.dev/api/w/:workspace/schedules/list", "params": [{ "name": "workspace", "value": "", "type": "path", "description": "The workspace id." }] },
+          "docs": "Lists cron schedules in a workspace."
+        },
+        {
+          "info": { "name": "Create a schedule.", "type": "http" },
+          "http": { "method": "POST", "url": "https://app.windmill.dev/api/w/:workspace/schedules/create", "params": [{ "name": "workspace", "value": "", "type": "path", "description": "The workspace id." }], "body": { "type": "json", "data": "{}" } },
+          "docs": "Creates a cron schedule for a script or flow path."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Variables", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List variables.", "type": "http" },
+          "http": { "method": "GET", "url": "https://app.windmill.dev/api/w/:workspace/variables/list", "params": [{ "name": "workspace", "value": "", "type": "path", "description": "The workspace id." }] },
+          "docs": "Lists workspace variables (secret values redacted)."
+        },
+        {
+          "info": { "name": "Create a variable.", "type": "http" },
+          "http": { "method": "POST", "url": "https://app.windmill.dev/api/w/:workspace/variables/create", "params": [{ "name": "workspace", "value": "", "type": "path", "description": "The workspace id." }], "body": { "type": "json", "data": "{}" } },
+          "docs": "Creates a workspace variable or secret."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Resources", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List resources.", "type": "http" },
+          "http": { "method": "GET", "url": "https://app.windmill.dev/api/w/:workspace/resources/list", "params": [{ "name": "workspace", "value": "", "type": "path", "description": "The workspace id." }] },
+          "docs": "Lists typed resource objects in a workspace."
+        },
+        {
+          "info": { "name": "Create a resource.", "type": "http" },
+          "http": { "method": "POST", "url": "https://app.windmill.dev/api/w/:workspace/resources/create", "params": [{ "name": "workspace", "value": "", "type": "path", "description": "The workspace id." }], "body": { "type": "json", "data": "{}" } },
+          "docs": "Creates a typed resource object."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Workspaces", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List workspaces.", "type": "http" },
+          "http": { "method": "GET", "url": "https://app.windmill.dev/api/workspaces/list" },
+          "docs": "Lists workspaces visible to the authenticated user."
+        },
+        {
+          "info": { "name": "Create a workspace.", "type": "http" },
+          "http": { "method": "POST", "url": "https://app.windmill.dev/api/workspaces/create", "body": { "type": "json", "data": "{}" } },
+          "docs": "Creates a new workspace (tenant)."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Users", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Who am I (global).", "type": "http" },
+          "http": { "method": "GET", "url": "https://app.windmill.dev/api/users/whoami" },
+          "docs": "Returns the globally authenticated user."
+        },
+        {
+          "info": { "name": "List workspace users.", "type": "http" },
+          "http": { "method": "GET", "url": "https://app.windmill.dev/api/w/:workspace/users/list", "params": [{ "name": "workspace", "value": "", "type": "path", "description": "The workspace id." }] },
+          "docs": "Lists users who are members of the workspace."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Groups", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List groups.", "type": "http" },
+          "http": { "method": "GET", "url": "https://app.windmill.dev/api/w/:workspace/groups/list", "params": [{ "name": "workspace", "value": "", "type": "path", "description": "The workspace id." }] },
+          "docs": "Lists user groups in a workspace."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Folders", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List folders.", "type": "http" },
+          "http": { "method": "GET", "url": "https://app.windmill.dev/api/w/:workspace/folders/list", "params": [{ "name": "workspace", "value": "", "type": "path", "description": "The workspace id." }] },
+          "docs": "Lists folders in a workspace."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Audit", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List audit logs.", "type": "http" },
+          "http": { "method": "GET", "url": "https://app.windmill.dev/api/w/:workspace/audit/list", "params": [{ "name": "workspace", "value": "", "type": "path", "description": "The workspace id." }] },
+          "docs": "Lists audit log entries (admin only, Enterprise Edition)."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Workers", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List workers.", "type": "http" },
+          "http": { "method": "GET", "url": "https://app.windmill.dev/api/workers/list" },
+          "docs": "Lists active workers in the fleet."
+        }
+      ]
+    },
+    {
+      "info": { "name": "Triggers", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "List HTTP triggers.", "type": "http" },
+          "http": { "method": "GET", "url": "https://app.windmill.dev/api/w/:workspace/http_triggers/list", "params": [{ "name": "workspace", "value": "", "type": "path", "description": "The workspace id." }] },
+          "docs": "Lists HTTP route triggers."
+        },
+        {
+          "info": { "name": "List WebSocket triggers.", "type": "http" },
+          "http": { "method": "GET", "url": "https://app.windmill.dev/api/w/:workspace/websocket_triggers/list", "params": [{ "name": "workspace", "value": "", "type": "path", "description": "The workspace id." }] },
+          "docs": "Lists WebSocket triggers. Windmill connects OUT to an external WebSocket server; this is not a Windmill-hosted WebSocket API."
+        },
+        {
+          "info": { "name": "Create a WebSocket trigger.", "type": "http" },
+          "http": { "method": "POST", "url": "https://app.windmill.dev/api/w/:workspace/websocket_triggers/create", "params": [{ "name": "workspace", "value": "", "type": "path", "description": "The workspace id." }], "body": { "type": "json", "data": "{}" } },
+          "docs": "Creates a WebSocket trigger that connects to an external WebSocket server and runs a runnable per message."
+        }
+      ]
+    },
+    {
+      "info": { "name": "OIDC", "type": "folder" },
+      "items": [
+        {
+          "info": { "name": "Generate an OIDC token.", "type": "http" },
+          "http": { "method": "POST", "url": "https://app.windmill.dev/api/w/:workspace/oidc/token", "params": [{ "name": "workspace", "value": "", "type": "path", "description": "The workspace id." }], "body": { "type": "json", "data": "{}" } },
+          "docs": "Mints a short-lived OIDC (JWT) token (Enterprise Edition)."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main/schema/api-commons.yml#/$defs/RateLimits
+provider: Windmill
+providerId: windmill-dev
+created: '2026-07-02'
+modified: '2026-07-02'
+reconciled: false
+tags:
+- Developer Platform
+- Workflows
+- Job Orchestration
+- Rate Limiting
+- Quotas
+description: >-
+  Windmill does not publish fixed numeric per-endpoint request-rate limits for
+  its REST API. On self-hosted Community Edition, throughput is bounded only by
+  your own infrastructure and by how many workers you run - each worker pulls
+  and executes jobs from the shared Postgres-backed queue, so overall execution
+  concurrency scales with the size of your worker fleet. On Windmill Cloud and
+  Enterprise, effective throughput is governed by your provisioned Compute Units
+  (worker capacity) and seat entitlements rather than by a per-minute API cap.
+  Application-level flow control is expressed through per-script/per-flow
+  concurrency limits and named concurrency groups, plus worker group tags that
+  route and cap specific workloads.
+notes: >-
+  Numeric per-account or per-endpoint API limits are not documented as of the
+  review date. Control execution load with concurrency limits, concurrency
+  groups, worker group sizing, and job timeouts. The Community Edition free tier
+  additionally caps SSO users (10), workspaces (3), groups (4), and emails
+  (100/day). Verify Cloud/Enterprise allowances on the pricing page.
+sources:
+- https://www.windmill.dev/docs/core_concepts/worker_groups
+- https://www.windmill.dev/docs/core_concepts/concurrency_limits
+- https://www.windmill.dev/pricing
+- https://github.com/windmill-labs/windmill
+responseCodes:
+  throttled: 429
+limits:
+- name: REST API Requests
+  scope: account
+  metric: requests
+  limit: not published
+  notes: No fixed numeric request-rate limit is documented for the Windmill REST API.
+- name: Self-Hosted Execution Throughput
+  scope: deployment
+  metric: jobs
+  limit: worker-fleet-bound
+  notes: Concurrency scales with the number and size of workers you run; bounded by your own hardware.
+- name: Compute Units
+  scope: account
+  metric: worker_capacity
+  limit: per plan
+  notes: On Cloud/Enterprise, execution capacity is provisioned in Compute Units (about 2 worker-GB-month each).
+- name: Per-Script / Per-Flow Concurrency
+  scope: runnable
+  metric: concurrent_executions
+  limit: configurable
+  notes: Each script or flow can declare a maximum number of concurrent executions within a time window.
+- name: Concurrency Groups
+  scope: group
+  metric: concurrent_executions
+  limit: configurable
+  notes: Named concurrency groups cap combined concurrency across multiple runnables that share the group.
+- name: Community Free Tier Caps
+  scope: instance
+  metric: various
+  limit: 10 SSO users / 3 workspaces / 4 groups / 100 emails per day
+  notes: Structural caps on the free Community Edition, not request-rate limits.
+policies:
+- name: Queue Backpressure
+  description: Jobs are enqueued in a Postgres-backed queue and pulled by available workers; when workers are saturated, jobs wait in the queue rather than being dropped.
+- name: Concurrency Limits
+  description: Per-runnable and per-group concurrency limits smooth spikes and protect downstream systems from overload.
+- name: Retries and Timeouts
+  description: Scripts and flow steps support configurable retries with backoff and per-job timeouts to bound runaway executions.
+- name: Backoff Strategy
+  description: API clients should implement exponential backoff with jitter and honor Retry-After on any 429 response.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

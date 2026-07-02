@@ -1,0 +1,116 @@
+specification: FinOps Framework
+specificationVersion: '1.0'
+schema: https://www.finops.org/framework/
+provider: Windmill
+providerId: windmill-dev
+created: '2026-07-02'
+modified: '2026-07-02'
+reconciled: false
+tags:
+- Developer Platform
+- Workflows
+- Job Orchestration
+- Open Source
+- FinOps
+- Cost Management
+- FOCUS
+description: >-
+  FinOps view of Windmill spend. Windmill's Community Edition is open source
+  (AGPL) and free to self-host - in that model the cost is your own compute,
+  storage, and network for running the Windmill server, its Postgres database,
+  and the worker fleet, with no vendor invoice. Windmill Enterprise (Cloud or
+  self-hosted) is billed on a combination of Compute Units - worker execution
+  capacity, roughly 2 worker-GB-month per CU - and Seats, with developer seats
+  full-price and operator (execute-only) seats at half. Native subworkers and
+  agent workers are metered separately. Because billing is driven by provisioned
+  worker capacity and active users rather than per-API-call, cost optimization
+  centers on right-sizing worker memory and count, consolidating operator seats,
+  and pruning idle workspaces and schedules.
+notes: >-
+  Enterprise per-unit rates (per CU, per seat) are not reconciled here; verify on
+  the Windmill pricing page. For self-hosted Community deployments, the dominant
+  costs are infrastructure (Windmill server + Postgres + workers) rather than a
+  license fee.
+sources:
+- https://www.windmill.dev/pricing
+- https://www.windmill.dev/docs
+- https://www.windmill.dev/changelog/new-pricing
+- https://github.com/windmill-labs/windmill
+- https://focus.finops.org/focus-specification/v1-3/
+alignedWith:
+  framework: FinOps Foundation Framework
+  frameworkUrl: https://www.finops.org/framework/
+  dataSpec: FOCUS
+  dataSpecVersion: '1.3'
+  dataSpecUrl: https://focus.finops.org/focus-specification/v1-3/
+publisherName: Windmill
+serviceCategory: Developer Platform and Workflow Orchestration
+billingModel:
+  pricingCategory: Usage-Based and Subscription
+  billingFrequency: Monthly
+  billingCurrency: USD
+  chargeCategories:
+  - Usage
+  - Purchase
+  - Adjustment
+focusColumns:
+  ServiceName: Windmill Enterprise
+  ServiceCategory: Developer Platform and Workflow Orchestration
+  ProviderName: Windmill
+  PublisherName: Windmill
+  InvoiceIssuerName: Windmill
+  BillingCurrency: USD
+  ChargeCategory: Usage
+  PricingCategory: Usage-Based
+meters:
+- name: compute_units
+  description: Worker execution capacity, roughly 2 worker-GB-month per Compute Unit; a 2 GB standard worker is 2 CU.
+  unit: worker_gb_month
+  aggregation: sum
+  dimensions:
+  - account
+  - worker_group
+- name: native_subworkers
+  description: Native subworkers (run in batches) billed separately from standard worker groups.
+  unit: subworkers
+  aggregation: sum
+  dimensions:
+  - account
+  - worker_group
+- name: agent_workers
+  description: Agent workers for distributed/edge execution, billed separately.
+  unit: workers
+  aggregation: sum
+  dimensions:
+  - account
+  - worker_group
+- name: developer_seats
+  description: Active users who can author and execute runnables, billed per seat.
+  unit: seats
+  aggregation: max
+  dimensions:
+  - account
+- name: operator_seats
+  description: Execute-only users, counted as half a developer seat.
+  unit: seats
+  aggregation: max
+  dimensions:
+  - account
+- name: self_hosted_compute
+  description: Infrastructure cost of running self-hosted Windmill (server + Postgres + workers); no Windmill invoice on Community Edition.
+  unit: hours
+  aggregation: sum
+  dimensions:
+  - deployment
+principles:
+- name: Visibility
+  description: Track Compute Units and seats per workspace and worker group; on self-hosted, monitor server, Postgres, and worker infrastructure costs.
+- name: Allocation
+  description: Use worker group tags and per-workspace grouping so compute and seat spend maps to teams and workloads.
+- name: Optimization
+  description: Right-size worker memory (1/2/>2 GB) and count, use concurrency limits to avoid over-provisioning, convert author-only users to operator seats, prune idle schedules and workspaces, and self-host Community Edition when volume is high.
+- name: Accountability
+  description: Assign owners per workspace and worker group; review monthly Compute Unit and seat usage against Enterprise entitlements or self-hosted infrastructure budget.
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

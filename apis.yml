@@ -1,0 +1,387 @@
+aid: windmill-dev
+url: https://raw.githubusercontent.com/api-evangelist/windmill-dev/refs/heads/main/apis.yml
+name: Windmill
+kind: company
+description: Windmill is an open-source developer platform that turns scripts (Python,
+  TypeScript, Go, Bash, SQL, and more) into internal tools, UIs, workflows, and cron
+  jobs. It runs as Windmill Cloud (app.windmill.dev) or self-hosted, with a distributed
+  worker fleet executing jobs. Everything in a workspace - scripts, flows, apps,
+  schedules, variables, resources, triggers - is addressable over a single REST API
+  (base https://app.windmill.dev/api on Cloud, or /api self-hosted), authenticated
+  with a Bearer token, and is the same surface the Windmill CLI and web UI use.
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+tags:
+- Developer Platform
+- Workflows
+- Internal Tools
+- Job Orchestration
+- Cron
+- Open Source
+created: '2026-07-02'
+modified: '2026-07-02'
+specificationVersion: '0.19'
+apis:
+- aid: windmill-dev:windmill-dev-scripts-api
+  name: Windmill Scripts API
+  tags:
+  - Scripts
+  - Code
+  - Runnables
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://www.windmill.dev/docs/getting_started/scripts_quickstart
+  baseURL: https://app.windmill.dev/api
+  properties:
+  - url: https://www.windmill.dev/docs/script_editor
+    type: Documentation
+  - url: https://app.windmill.dev/openapi.html
+    type: APIReference
+  - url: openapi/windmill-dev-openapi.yml
+    type: OpenAPI
+  - url: collections/windmill-dev.postman_collection.json
+    type: PostmanCollection
+  - url: collections/windmill-dev.opencollection.json
+    type: OpenCollection
+  description: Create, list, get, update, archive, and version scripts - the core
+    runnables written in Python, TypeScript (Bun/Deno), Go, Bash, SQL, and other
+    supported languages. Scripts are content-addressed by hash and pathed within a
+    workspace.
+- aid: windmill-dev:windmill-dev-flows-api
+  name: Windmill Flows API
+  tags:
+  - Flows
+  - Workflows
+  - Orchestration
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://www.windmill.dev/docs/flows/flow_editor
+  baseURL: https://app.windmill.dev/api
+  properties:
+  - url: https://www.windmill.dev/docs/flows/flow_editor
+    type: Documentation
+  - url: https://app.windmill.dev/openapi.html
+    type: APIReference
+  - url: openapi/windmill-dev-openapi.yml
+    type: OpenAPI
+  - url: collections/windmill-dev.postman_collection.json
+    type: PostmanCollection
+  - url: collections/windmill-dev.opencollection.json
+    type: OpenCollection
+  description: Compose scripts into directed-acyclic-graph flows with branches,
+    loops, approvals, retries, and error handlers. Create, list, get, and update
+    flows, and inspect their versions.
+- aid: windmill-dev:windmill-dev-apps-api
+  name: Windmill Apps API
+  tags:
+  - Apps
+  - UI
+  - Low Code
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://www.windmill.dev/docs/apps/app_editor
+  baseURL: https://app.windmill.dev/api
+  properties:
+  - url: https://www.windmill.dev/docs/apps/app_editor
+    type: Documentation
+  - url: https://app.windmill.dev/openapi.html
+    type: APIReference
+  - url: openapi/windmill-dev-openapi.yml
+    type: OpenAPI
+  - url: collections/windmill-dev.postman_collection.json
+    type: PostmanCollection
+  - url: collections/windmill-dev.opencollection.json
+    type: OpenCollection
+  description: Manage low-code apps - drag-and-drop UIs backed by scripts and flows.
+    Create, list, get, and update apps, and expose public app views for sharing.
+- aid: windmill-dev:windmill-dev-jobs-api
+  name: Windmill Jobs API
+  tags:
+  - Jobs
+  - Execution
+  - Runs
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://www.windmill.dev/docs/core_concepts/jobs
+  baseURL: https://app.windmill.dev/api
+  properties:
+  - url: https://www.windmill.dev/docs/core_concepts/jobs
+    type: Documentation
+  - url: https://app.windmill.dev/openapi.html
+    type: APIReference
+  - url: openapi/windmill-dev-openapi.yml
+    type: OpenAPI
+  - url: collections/windmill-dev.postman_collection.json
+    type: PostmanCollection
+  - url: collections/windmill-dev.opencollection.json
+    type: OpenCollection
+  description: Trigger and manage job executions - run a script or flow by path or
+    hash (fire-and-forget or run-and-wait-result), list queued and completed jobs,
+    get job status and results, and cancel running jobs.
+- aid: windmill-dev:windmill-dev-schedules-api
+  name: Windmill Schedules API
+  tags:
+  - Schedules
+  - Cron
+  - Automation
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://www.windmill.dev/docs/core_concepts/scheduling
+  baseURL: https://app.windmill.dev/api
+  properties:
+  - url: https://www.windmill.dev/docs/core_concepts/scheduling
+    type: Documentation
+  - url: https://app.windmill.dev/openapi.html
+    type: APIReference
+  - url: openapi/windmill-dev-openapi.yml
+    type: OpenAPI
+  - url: collections/windmill-dev.postman_collection.json
+    type: PostmanCollection
+  - url: collections/windmill-dev.opencollection.json
+    type: OpenCollection
+  description: Schedule scripts and flows on cron expressions. Create, list, get,
+    update, and enable/disable schedules attached to a runnable path.
+- aid: windmill-dev:windmill-dev-variables-api
+  name: Windmill Variables API
+  tags:
+  - Variables
+  - Secrets
+  - Configuration
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://www.windmill.dev/docs/core_concepts/variables_and_secrets
+  baseURL: https://app.windmill.dev/api
+  properties:
+  - url: https://www.windmill.dev/docs/core_concepts/variables_and_secrets
+    type: Documentation
+  - url: https://app.windmill.dev/openapi.html
+    type: APIReference
+  - url: openapi/windmill-dev-openapi.yml
+    type: OpenAPI
+  - url: collections/windmill-dev.postman_collection.json
+    type: PostmanCollection
+  - url: collections/windmill-dev.opencollection.json
+    type: OpenCollection
+  description: Manage workspace variables and secrets - encrypted, path-scoped
+    values injected into scripts and flows at runtime. Create, list, get, update,
+    and delete variables.
+- aid: windmill-dev:windmill-dev-resources-api
+  name: Windmill Resources API
+  tags:
+  - Resources
+  - Connections
+  - Integrations
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://www.windmill.dev/docs/core_concepts/resources_and_types
+  baseURL: https://app.windmill.dev/api
+  properties:
+  - url: https://www.windmill.dev/docs/core_concepts/resources_and_types
+    type: Documentation
+  - url: https://app.windmill.dev/openapi.html
+    type: APIReference
+  - url: openapi/windmill-dev-openapi.yml
+    type: OpenAPI
+  - url: collections/windmill-dev.postman_collection.json
+    type: PostmanCollection
+  - url: collections/windmill-dev.opencollection.json
+    type: OpenCollection
+  description: Manage resources and resource types - structured, typed connection
+    objects (database credentials, API keys, cloud accounts) referenced by scripts
+    and flows. Create, list, get, update, and delete resources and their types.
+- aid: windmill-dev:windmill-dev-workspaces-api
+  name: Windmill Workspaces API
+  tags:
+  - Workspaces
+  - Tenancy
+  - Settings
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://www.windmill.dev/docs/core_concepts/roles_and_permissions
+  baseURL: https://app.windmill.dev/api
+  properties:
+  - url: https://www.windmill.dev/docs/core_concepts/roles_and_permissions
+    type: Documentation
+  - url: https://app.windmill.dev/openapi.html
+    type: APIReference
+  - url: openapi/windmill-dev-openapi.yml
+    type: OpenAPI
+  - url: collections/windmill-dev.postman_collection.json
+    type: PostmanCollection
+  - url: collections/windmill-dev.opencollection.json
+    type: OpenCollection
+  description: List, create, archive, and delete workspaces (isolated tenants), and
+    read or update workspace settings, invites, and membership. Windmill resources
+    are all scoped under a workspace.
+- aid: windmill-dev:windmill-dev-users-api
+  name: Windmill Users API
+  tags:
+  - Users
+  - Authentication
+  - Tokens
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://www.windmill.dev/docs/core_concepts/authentification
+  baseURL: https://app.windmill.dev/api
+  properties:
+  - url: https://www.windmill.dev/docs/core_concepts/authentification
+    type: Documentation
+  - url: https://app.windmill.dev/openapi.html
+    type: APIReference
+  - url: openapi/windmill-dev-openapi.yml
+    type: OpenAPI
+  - url: collections/windmill-dev.postman_collection.json
+    type: PostmanCollection
+  - url: collections/windmill-dev.opencollection.json
+    type: OpenCollection
+  description: Manage users globally and per workspace, log in and out, resolve the
+    current identity (whoami), create and revoke API tokens, and manage service
+    accounts used for automation.
+- aid: windmill-dev:windmill-dev-groups-api
+  name: Windmill Groups API
+  tags:
+  - Groups
+  - Permissions
+  - RBAC
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://www.windmill.dev/docs/core_concepts/groups_and_folders
+  baseURL: https://app.windmill.dev/api
+  properties:
+  - url: https://www.windmill.dev/docs/core_concepts/groups_and_folders
+    type: Documentation
+  - url: https://app.windmill.dev/openapi.html
+    type: APIReference
+  - url: openapi/windmill-dev-openapi.yml
+    type: OpenAPI
+  - url: collections/windmill-dev.postman_collection.json
+    type: PostmanCollection
+  - url: collections/windmill-dev.opencollection.json
+    type: OpenCollection
+  description: Manage user groups used for role-based access control. Create, list,
+    get, update, and delete groups, and add or remove members.
+- aid: windmill-dev:windmill-dev-folders-api
+  name: Windmill Folders API
+  tags:
+  - Folders
+  - Organization
+  - Permissions
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://www.windmill.dev/docs/core_concepts/groups_and_folders
+  baseURL: https://app.windmill.dev/api
+  properties:
+  - url: https://www.windmill.dev/docs/core_concepts/groups_and_folders
+    type: Documentation
+  - url: https://app.windmill.dev/openapi.html
+    type: APIReference
+  - url: openapi/windmill-dev-openapi.yml
+    type: OpenAPI
+  - url: collections/windmill-dev.postman_collection.json
+    type: PostmanCollection
+  - url: collections/windmill-dev.opencollection.json
+    type: OpenCollection
+  description: Manage folders - the ownership and permission boundaries that group
+    scripts, flows, apps, variables, and resources. Create, list, get, update, and
+    delete folders and manage their owners.
+- aid: windmill-dev:windmill-dev-audit-api
+  name: Windmill Audit Logs API
+  tags:
+  - Audit
+  - Logging
+  - Compliance
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://www.windmill.dev/docs/core_concepts/audit_logs
+  baseURL: https://app.windmill.dev/api
+  properties:
+  - url: https://www.windmill.dev/docs/core_concepts/audit_logs
+    type: Documentation
+  - url: https://app.windmill.dev/openapi.html
+    type: APIReference
+  - url: openapi/windmill-dev-openapi.yml
+    type: OpenAPI
+  - url: collections/windmill-dev.postman_collection.json
+    type: PostmanCollection
+  - url: collections/windmill-dev.opencollection.json
+    type: OpenCollection
+  description: List and retrieve audit log entries recording who did what in a
+    workspace. Audit logs are an admin-only capability and a Windmill Enterprise
+    Edition feature.
+- aid: windmill-dev:windmill-dev-workers-api
+  name: Windmill Workers API
+  tags:
+  - Workers
+  - Fleet
+  - Compute
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://www.windmill.dev/docs/core_concepts/worker_groups
+  baseURL: https://app.windmill.dev/api
+  properties:
+  - url: https://www.windmill.dev/docs/core_concepts/worker_groups
+    type: Documentation
+  - url: https://app.windmill.dev/openapi.html
+    type: APIReference
+  - url: openapi/windmill-dev-openapi.yml
+    type: OpenAPI
+  - url: collections/windmill-dev.postman_collection.json
+    type: PostmanCollection
+  - url: collections/windmill-dev.opencollection.json
+    type: OpenCollection
+  description: Observe the distributed worker fleet that executes jobs - list active
+    workers, their worker groups and tags, and read queue metrics. Compute capacity
+    is billed in Compute Units on paid plans.
+- aid: windmill-dev:windmill-dev-triggers-api
+  name: Windmill Triggers API
+  tags:
+  - Triggers
+  - Webhooks
+  - Event Driven
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://www.windmill.dev/docs/getting_started/triggers
+  baseURL: https://app.windmill.dev/api
+  properties:
+  - url: https://www.windmill.dev/docs/getting_started/triggers
+    type: Documentation
+  - url: https://www.windmill.dev/docs/core_concepts/websocket_triggers
+    type: APIReference
+  - url: openapi/windmill-dev-openapi.yml
+    type: OpenAPI
+  - url: collections/windmill-dev.postman_collection.json
+    type: PostmanCollection
+  - url: collections/windmill-dev.opencollection.json
+    type: OpenCollection
+  description: Configure event triggers that run scripts and flows - HTTP routes,
+    WebSocket, Kafka, NATS, Postgres, SQS, and MQTT triggers. Note that WebSocket
+    triggers have Windmill connect OUT to an external WebSocket server as an event
+    source; they do not expose a Windmill-hosted WebSocket API. Create, list, get,
+    update, and delete triggers of each type.
+- aid: windmill-dev:windmill-dev-oidc-api
+  name: Windmill OIDC API
+  tags:
+  - OIDC
+  - Identity
+  - Federation
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
+  humanURL: https://www.windmill.dev/docs/core_concepts/oidc
+  baseURL: https://app.windmill.dev/api
+  properties:
+  - url: https://www.windmill.dev/docs/core_concepts/oidc
+    type: Documentation
+  - url: https://app.windmill.dev/openapi.html
+    type: APIReference
+  - url: openapi/windmill-dev-openapi.yml
+    type: OpenAPI
+  - url: collections/windmill-dev.postman_collection.json
+    type: PostmanCollection
+  - url: collections/windmill-dev.opencollection.json
+    type: OpenCollection
+  description: Mint short-lived OIDC (JWT) tokens from within a job so scripts and
+    flows can authenticate to external cloud providers (AWS, GCP, Azure, Vault)
+    without long-lived secrets. OIDC token issuance is a Windmill Enterprise Edition
+    feature.
+common:
+- type: GitHubOrganization
+  url: https://github.com/windmill-labs
+- type: LinkedIn
+  url: https://www.linkedin.com/company/windmill-labs
+- type: Website
+  url: https://www.windmill.dev
+- type: Documentation
+  url: https://www.windmill.dev/docs
+- type: Plans
+  url: plans/windmill-dev-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/windmill-dev-rate-limits.yml
+- type: FinOps
+  url: finops/windmill-dev-finops.yml
+maintainers:
+- FN: Kin Lane
+  email: kin@apievangelist.com

@@ -1,0 +1,1406 @@
+openapi: 3.0.3
+info:
+  title: Windmill API
+  description: >-
+    Windmill is an open-source developer platform that turns scripts into
+    internal tools, UIs, workflows, and cron jobs, executed by a distributed
+    worker fleet. This is a representative subset of the Windmill REST API - the
+    same surface used by the Windmill CLI and web UI. The authoritative,
+    machine-generated specification is served live at GET /openapi.yaml (see
+    https://app.windmill.dev/openapi.html); this document curates the most
+    commonly used, stable endpoints for discovery.
+
+    Almost every resource is scoped under a workspace at the /w/{workspace}
+    path prefix. Windmill runs as Windmill Cloud (base
+    https://app.windmill.dev/api) or self-hosted (base http(s)://your-host/api).
+    Requests are authenticated with a Bearer token created in the Windmill UI
+    under account settings, or with a session cookie.
+  version: 1.745.0
+  contact:
+    name: Windmill
+    url: https://www.windmill.dev
+  license:
+    name: AGPL-3.0 (community) / Windmill Enterprise License
+    url: https://github.com/windmill-labs/windmill/blob/main/LICENSE
+servers:
+  - url: https://app.windmill.dev/api
+    description: Windmill Cloud
+  - url: http://localhost:8000/api
+    description: Local development (self-hosted)
+security:
+  - bearerAuth: []
+  - cookieAuth: []
+tags:
+  - name: Scripts
+    description: Code runnables in Python, TypeScript, Go, Bash, SQL, and more.
+  - name: Flows
+    description: DAG workflows composing scripts with branches, loops, and approvals.
+  - name: Apps
+    description: Low-code UIs backed by scripts and flows.
+  - name: Jobs
+    description: Execution of scripts and flows - run, inspect, and cancel jobs.
+  - name: Schedules
+    description: Cron schedules attached to runnables.
+  - name: Variables
+    description: Encrypted, path-scoped variables and secrets.
+  - name: Resources
+    description: Typed connection objects and resource types.
+  - name: Workspaces
+    description: Isolated tenants and their settings.
+  - name: Users
+    description: Users, authentication, tokens, and service accounts.
+  - name: Groups
+    description: User groups for role-based access control.
+  - name: Folders
+    description: Ownership and permission boundaries for workspace assets.
+  - name: Audit
+    description: Audit log entries (Enterprise Edition).
+  - name: Workers
+    description: The distributed worker fleet executing jobs.
+  - name: Triggers
+    description: Event triggers - HTTP, WebSocket, Kafka, NATS, Postgres, SQS, MQTT.
+  - name: OIDC
+    description: Short-lived OIDC token issuance (Enterprise Edition).
+paths:
+  /version:
+    get:
+      operationId: getVersion
+      tags:
+        - Workspaces
+      summary: Get backend version
+      description: Returns the running Windmill backend version.
+      security: []
+      responses:
+        '200':
+          description: Version string.
+          content:
+            application/json:
+              schema:
+                type: string
+  /w/{workspace}/scripts/list:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+    get:
+      operationId: listScripts
+      tags:
+        - Scripts
+      summary: List scripts
+      description: Lists scripts in a workspace, most recent version per path.
+      responses:
+        '200':
+          description: A list of scripts.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Script'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/scripts/create:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+    post:
+      operationId: createScript
+      tags:
+        - Scripts
+      summary: Create a script
+      description: Creates a new script (or a new version of an existing path).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScriptInput'
+      responses:
+        '201':
+          description: The created script hash.
+          content:
+            application/json:
+              schema:
+                type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/scripts/get/p/{path}:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+      - $ref: '#/components/parameters/Path'
+    get:
+      operationId: getScriptByPath
+      tags:
+        - Scripts
+      summary: Get a script by path
+      description: Retrieves the latest version of a script at the given path.
+      responses:
+        '200':
+          description: The requested script.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Script'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /w/{workspace}/scripts/archive/p/{path}:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+      - $ref: '#/components/parameters/Path'
+    post:
+      operationId: archiveScriptByPath
+      tags:
+        - Scripts
+      summary: Archive a script
+      description: Archives the script at the given path.
+      responses:
+        '200':
+          description: Archive confirmation.
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /w/{workspace}/flows/list:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+    get:
+      operationId: listFlows
+      tags:
+        - Flows
+      summary: List flows
+      description: Lists flows in a workspace.
+      responses:
+        '200':
+          description: A list of flows.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Flow'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/flows/create:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+    post:
+      operationId: createFlow
+      tags:
+        - Flows
+      summary: Create a flow
+      description: Creates a new flow.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Flow'
+      responses:
+        '201':
+          description: Created flow path.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/flows/get/p/{path}:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+      - $ref: '#/components/parameters/Path'
+    get:
+      operationId: getFlowByPath
+      tags:
+        - Flows
+      summary: Get a flow by path
+      description: Retrieves a flow by its path.
+      responses:
+        '200':
+          description: The requested flow.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Flow'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /w/{workspace}/apps/list:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+    get:
+      operationId: listApps
+      tags:
+        - Apps
+      summary: List apps
+      description: Lists low-code apps in a workspace.
+      responses:
+        '200':
+          description: A list of apps.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/App'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/apps/get/p/{path}:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+      - $ref: '#/components/parameters/Path'
+    get:
+      operationId: getAppByPath
+      tags:
+        - Apps
+      summary: Get an app by path
+      description: Retrieves an app by its path.
+      responses:
+        '200':
+          description: The requested app.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/App'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /w/{workspace}/jobs/run/p/{path}:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+      - $ref: '#/components/parameters/Path'
+    post:
+      operationId: runScriptByPath
+      tags:
+        - Jobs
+      summary: Run a script by path
+      description: >-
+        Enqueues a job to run the script at the given path with the supplied
+        arguments and returns the new job UUID (fire and forget).
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '201':
+          description: The created job UUID.
+          content:
+            application/json:
+              schema:
+                type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/jobs/run_wait_result/p/{path}:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+      - $ref: '#/components/parameters/Path'
+    post:
+      operationId: runScriptByPathAndWaitResult
+      tags:
+        - Jobs
+      summary: Run a script by path and wait for the result
+      description: >-
+        Runs the script at the given path synchronously and returns its result
+        once the job completes.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: The job result.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/jobs/run/f/{path}:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+      - $ref: '#/components/parameters/Path'
+    post:
+      operationId: runFlowByPath
+      tags:
+        - Jobs
+      summary: Run a flow by path
+      description: Enqueues a job to run the flow at the given path.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '201':
+          description: The created job UUID.
+          content:
+            application/json:
+              schema:
+                type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/jobs/list:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+    get:
+      operationId: listJobs
+      tags:
+        - Jobs
+      summary: List jobs
+      description: Lists queued, running, and completed jobs in a workspace.
+      responses:
+        '200':
+          description: A list of jobs.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Job'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/jobs_u/get/{id}:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+      - $ref: '#/components/parameters/JobId'
+    get:
+      operationId: getJob
+      tags:
+        - Jobs
+      summary: Get a job
+      description: Retrieves a job (queued or completed) by its UUID.
+      responses:
+        '200':
+          description: The requested job.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /w/{workspace}/jobs_u/completed/get_result/{id}:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+      - $ref: '#/components/parameters/JobId'
+    get:
+      operationId: getCompletedJobResult
+      tags:
+        - Jobs
+      summary: Get a completed job result
+      description: Retrieves the result payload of a completed job.
+      responses:
+        '200':
+          description: The job result.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /w/{workspace}/jobs_u/queue/cancel/{id}:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+      - $ref: '#/components/parameters/JobId'
+    post:
+      operationId: cancelJob
+      tags:
+        - Jobs
+      summary: Cancel a job
+      description: Cancels a queued or running job by its UUID.
+      responses:
+        '200':
+          description: Cancellation confirmation.
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /w/{workspace}/schedules/list:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+    get:
+      operationId: listSchedules
+      tags:
+        - Schedules
+      summary: List schedules
+      description: Lists cron schedules in a workspace.
+      responses:
+        '200':
+          description: A list of schedules.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Schedule'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/schedules/create:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+    post:
+      operationId: createSchedule
+      tags:
+        - Schedules
+      summary: Create a schedule
+      description: Creates a cron schedule for a script or flow path.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Schedule'
+      responses:
+        '201':
+          description: Created schedule path.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/schedules/setenabled/{path}:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+      - $ref: '#/components/parameters/Path'
+    post:
+      operationId: setScheduleEnabled
+      tags:
+        - Schedules
+      summary: Enable or disable a schedule
+      description: Enables or disables the schedule at the given path.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                enabled:
+                  type: boolean
+      responses:
+        '200':
+          description: Update confirmation.
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /w/{workspace}/variables/list:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+    get:
+      operationId: listVariables
+      tags:
+        - Variables
+      summary: List variables
+      description: Lists workspace variables (secret values are redacted).
+      responses:
+        '200':
+          description: A list of variables.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Variable'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/variables/create:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+    post:
+      operationId: createVariable
+      tags:
+        - Variables
+      summary: Create a variable
+      description: Creates a workspace variable or secret.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Variable'
+      responses:
+        '201':
+          description: Created variable path.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/variables/get/{path}:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+      - $ref: '#/components/parameters/Path'
+    get:
+      operationId: getVariable
+      tags:
+        - Variables
+      summary: Get a variable
+      description: Retrieves a variable by path, optionally decrypting the secret value.
+      responses:
+        '200':
+          description: The requested variable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Variable'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /w/{workspace}/variables/delete/{path}:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+      - $ref: '#/components/parameters/Path'
+    delete:
+      operationId: deleteVariable
+      tags:
+        - Variables
+      summary: Delete a variable
+      description: Deletes a variable by path.
+      responses:
+        '200':
+          description: Deletion confirmation.
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /w/{workspace}/resources/list:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+    get:
+      operationId: listResources
+      tags:
+        - Resources
+      summary: List resources
+      description: Lists typed resource objects in a workspace.
+      responses:
+        '200':
+          description: A list of resources.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Resource'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/resources/create:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+    post:
+      operationId: createResource
+      tags:
+        - Resources
+      summary: Create a resource
+      description: Creates a typed resource object.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Resource'
+      responses:
+        '201':
+          description: Created resource path.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/resources/type/list:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+    get:
+      operationId: listResourceTypes
+      tags:
+        - Resources
+      summary: List resource types
+      description: Lists the resource types (schemas) available in a workspace.
+      responses:
+        '200':
+          description: A list of resource types.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /workspaces/list:
+    get:
+      operationId: listWorkspaces
+      tags:
+        - Workspaces
+      summary: List workspaces
+      description: Lists workspaces visible to the authenticated user.
+      responses:
+        '200':
+          description: A list of workspaces.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Workspace'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /workspaces/create:
+    post:
+      operationId: createWorkspace
+      tags:
+        - Workspaces
+      summary: Create a workspace
+      description: Creates a new workspace (tenant).
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Workspace'
+      responses:
+        '201':
+          description: Created workspace id.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/workspaces/get_settings:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+    get:
+      operationId: getWorkspaceSettings
+      tags:
+        - Workspaces
+      summary: Get workspace settings
+      description: Retrieves settings for a workspace (admin only).
+      responses:
+        '200':
+          description: Workspace settings.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /users/whoami:
+    get:
+      operationId: globalWhoami
+      tags:
+        - Users
+      summary: Get current global user
+      description: Returns the globally authenticated user.
+      responses:
+        '200':
+          description: The current user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/users/whoami:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+    get:
+      operationId: whoami
+      tags:
+        - Users
+      summary: Get current workspace user
+      description: Returns the current user within the workspace context.
+      responses:
+        '200':
+          description: The current workspace user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/users/list:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+    get:
+      operationId: listWorkspaceUsers
+      tags:
+        - Users
+      summary: List workspace users
+      description: Lists users who are members of the workspace.
+      responses:
+        '200':
+          description: A list of users.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /users/tokens/create:
+    post:
+      operationId: createToken
+      tags:
+        - Users
+      summary: Create an API token
+      description: Creates a new API token for the authenticated user.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                label:
+                  type: string
+                expiration:
+                  type: string
+                  format: date-time
+      responses:
+        '201':
+          description: The created token string.
+          content:
+            application/json:
+              schema:
+                type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/groups/list:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+    get:
+      operationId: listGroups
+      tags:
+        - Groups
+      summary: List groups
+      description: Lists user groups in a workspace.
+      responses:
+        '200':
+          description: A list of groups.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Group'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/groups/create:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+    post:
+      operationId: createGroup
+      tags:
+        - Groups
+      summary: Create a group
+      description: Creates a new user group.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Group'
+      responses:
+        '201':
+          description: Creation confirmation.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/groups/adduser/{name}:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+      - $ref: '#/components/parameters/Name'
+    post:
+      operationId: addUserToGroup
+      tags:
+        - Groups
+      summary: Add a user to a group
+      description: Adds a user to the named group.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+      responses:
+        '200':
+          description: Update confirmation.
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /w/{workspace}/folders/list:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+    get:
+      operationId: listFolders
+      tags:
+        - Folders
+      summary: List folders
+      description: Lists folders in a workspace.
+      responses:
+        '200':
+          description: A list of folders.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Folder'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/folders/create:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+    post:
+      operationId: createFolder
+      tags:
+        - Folders
+      summary: Create a folder
+      description: Creates a new folder.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Folder'
+      responses:
+        '201':
+          description: Creation confirmation.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/audit/list:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+    get:
+      operationId: listAuditLogs
+      tags:
+        - Audit
+      summary: List audit logs
+      description: Lists audit log entries for a workspace (admin only, Enterprise Edition).
+      responses:
+        '200':
+          description: A list of audit log entries.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AuditLog'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/audit/get/{id}:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+      - name: id
+        in: path
+        required: true
+        description: The audit log entry id.
+        schema:
+          type: integer
+    get:
+      operationId: getAuditLog
+      tags:
+        - Audit
+      summary: Get an audit log entry
+      description: Retrieves a single audit log entry by id.
+      responses:
+        '200':
+          description: The requested audit log entry.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditLog'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /workers/list:
+    get:
+      operationId: listWorkers
+      tags:
+        - Workers
+      summary: List workers
+      description: Lists active workers in the fleet with their worker group and tags.
+      responses:
+        '200':
+          description: A list of workers.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Worker'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/queue/count:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+    get:
+      operationId: getQueueCount
+      tags:
+        - Workers
+      summary: Get queue count
+      description: Returns the count of jobs currently queued in a workspace.
+      responses:
+        '200':
+          description: Queue counts.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  database_length:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/http_triggers/list:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+    get:
+      operationId: listHttpTriggers
+      tags:
+        - Triggers
+      summary: List HTTP triggers
+      description: Lists HTTP route triggers that invoke scripts or flows on inbound requests.
+      responses:
+        '200':
+          description: A list of HTTP triggers.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Trigger'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/websocket_triggers/list:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+    get:
+      operationId: listWebsocketTriggers
+      tags:
+        - Triggers
+      summary: List WebSocket triggers
+      description: >-
+        Lists WebSocket triggers. A WebSocket trigger has Windmill connect OUT to
+        an external WebSocket server (ws:// or wss://) and run a runnable when a
+        message is received. This is an outbound consumer, not a Windmill-hosted
+        WebSocket API.
+      responses:
+        '200':
+          description: A list of WebSocket triggers.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Trigger'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/websocket_triggers/create:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+    post:
+      operationId: createWebsocketTrigger
+      tags:
+        - Triggers
+      summary: Create a WebSocket trigger
+      description: >-
+        Creates a WebSocket trigger that connects to an external WebSocket server
+        URL and runs a script or flow for each received message.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Trigger'
+      responses:
+        '201':
+          description: Creation confirmation.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/kafka_triggers/list:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+    get:
+      operationId: listKafkaTriggers
+      tags:
+        - Triggers
+      summary: List Kafka triggers
+      description: Lists Kafka triggers that consume topics and run runnables per message.
+      responses:
+        '200':
+          description: A list of Kafka triggers.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Trigger'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/postgres_triggers/list:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+    get:
+      operationId: listPostgresTriggers
+      tags:
+        - Triggers
+      summary: List Postgres triggers
+      description: Lists Postgres logical-replication triggers that run runnables on row changes.
+      responses:
+        '200':
+          description: A list of Postgres triggers.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Trigger'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/oidc/token:
+    parameters:
+      - $ref: '#/components/parameters/Workspace'
+    post:
+      operationId: generateOidcToken
+      tags:
+        - OIDC
+      summary: Generate an OIDC token
+      description: >-
+        Mints a short-lived OIDC (JWT) token, scoped to the current job/identity,
+        for authenticating to external cloud providers without long-lived
+        secrets. Enterprise Edition feature.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                audience:
+                  type: string
+      responses:
+        '200':
+          description: The signed OIDC token.
+          content:
+            application/json:
+              schema:
+                type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: >-
+        Bearer token created in the Windmill UI under account settings, passed as
+        Authorization: Bearer YOUR_TOKEN.
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: token
+      description: Session cookie set by the Windmill web UI after login.
+  parameters:
+    Workspace:
+      name: workspace
+      in: path
+      required: true
+      description: The workspace id (tenant) the resource belongs to.
+      schema:
+        type: string
+    Path:
+      name: path
+      in: path
+      required: true
+      description: The runnable/resource path (e.g. u/username/my_script or f/folder/name).
+      schema:
+        type: string
+    Name:
+      name: name
+      in: path
+      required: true
+      description: The group name.
+      schema:
+        type: string
+    JobId:
+      name: id
+      in: path
+      required: true
+      description: The job UUID.
+      schema:
+        type: string
+        format: uuid
+  responses:
+    Unauthorized:
+      description: Missing or invalid Bearer token or session cookie.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            name:
+              type: string
+            message:
+              type: string
+    Script:
+      type: object
+      properties:
+        hash:
+          type: string
+        path:
+          type: string
+        summary:
+          type: string
+        description:
+          type: string
+        content:
+          type: string
+        language:
+          type: string
+          enum:
+            - python3
+            - deno
+            - bun
+            - go
+            - bash
+            - powershell
+            - postgresql
+            - mysql
+            - bigquery
+            - snowflake
+            - graphql
+            - nativets
+            - php
+        schema:
+          type: object
+          additionalProperties: true
+        created_at:
+          type: string
+          format: date-time
+    ScriptInput:
+      type: object
+      required:
+        - path
+        - content
+        - language
+      properties:
+        path:
+          type: string
+        summary:
+          type: string
+        description:
+          type: string
+        content:
+          type: string
+        language:
+          type: string
+        schema:
+          type: object
+          additionalProperties: true
+    Flow:
+      type: object
+      properties:
+        path:
+          type: string
+        summary:
+          type: string
+        description:
+          type: string
+        value:
+          type: object
+          description: The flow definition (modules, branches, loops).
+          additionalProperties: true
+        schema:
+          type: object
+          additionalProperties: true
+    App:
+      type: object
+      properties:
+        path:
+          type: string
+        summary:
+          type: string
+        value:
+          type: object
+          description: The app layout and component graph.
+          additionalProperties: true
+        policy:
+          type: object
+          additionalProperties: true
+    Job:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        script_path:
+          type: string
+        job_kind:
+          type: string
+          enum:
+            - script
+            - flow
+            - preview
+            - dependencies
+        success:
+          type: boolean
+        running:
+          type: boolean
+        canceled:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        started_at:
+          type: string
+          format: date-time
+        result:
+          type: object
+          additionalProperties: true
+    Schedule:
+      type: object
+      required:
+        - path
+        - schedule
+        - script_path
+      properties:
+        path:
+          type: string
+        schedule:
+          type: string
+          description: A cron expression.
+        script_path:
+          type: string
+        is_flow:
+          type: boolean
+        enabled:
+          type: boolean
+        args:
+          type: object
+          additionalProperties: true
+    Variable:
+      type: object
+      required:
+        - path
+        - value
+      properties:
+        path:
+          type: string
+        value:
+          type: string
+        is_secret:
+          type: boolean
+        description:
+          type: string
+    Resource:
+      type: object
+      required:
+        - path
+        - resource_type
+      properties:
+        path:
+          type: string
+        resource_type:
+          type: string
+        description:
+          type: string
+        value:
+          type: object
+          additionalProperties: true
+    Workspace:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        owner:
+          type: string
+    User:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        username:
+          type: string
+        is_admin:
+          type: boolean
+        operator:
+          type: boolean
+    Group:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        summary:
+          type: string
+        members:
+          type: array
+          items:
+            type: string
+    Folder:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+        owners:
+          type: array
+          items:
+            type: string
+        extra_perms:
+          type: object
+          additionalProperties: true
+    AuditLog:
+      type: object
+      properties:
+        id:
+          type: integer
+        timestamp:
+          type: string
+          format: date-time
+        username:
+          type: string
+        operation:
+          type: string
+        action_kind:
+          type: string
+          enum:
+            - Create
+            - Update
+            - Delete
+            - Execute
+        resource:
+          type: string
+    Worker:
+      type: object
+      properties:
+        worker:
+          type: string
+        worker_instance:
+          type: string
+        worker_group:
+          type: string
+        last_ping:
+          type: integer
+        jobs_executed:
+          type: integer
+        custom_tags:
+          type: array
+          items:
+            type: string
+    Trigger:
+      type: object
+      properties:
+        path:
+          type: string
+        script_path:
+          type: string
+        is_flow:
+          type: boolean
+        enabled:
+          type: boolean
+        url:
+          type: string
+          description: For a WebSocket trigger, the external WebSocket server URL Windmill connects to.
+        extra_config:
+          type: object
+          additionalProperties: true
