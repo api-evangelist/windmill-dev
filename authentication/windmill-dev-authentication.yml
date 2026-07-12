@@ -1,0 +1,24 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/windmill-dev-openapi.yml
+summary:
+  types:
+  - apiKey
+  - http
+  api_key_in:
+  - cookie
+schemes:
+- name: bearerAuth
+  type: http
+  scheme: bearer
+  description: 'Bearer token created in the Windmill UI under account settings, passed as Authorization:
+    Bearer YOUR_TOKEN.'
+  sources:
+  - openapi/windmill-dev-openapi.yml
+- name: cookieAuth
+  type: apiKey
+  in: cookie
+  parameter: token
+  description: Session cookie set by the Windmill web UI after login.
+  sources:
+  - openapi/windmill-dev-openapi.yml

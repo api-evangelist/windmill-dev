@@ -368,6 +368,12 @@ apis:
     without long-lived secrets. OIDC token issuance is a Windmill Enterprise Edition
     feature.
 common:
+- type: DomainSecurity
+  url: security/windmill-dev-domain-security.yml
+- type: Authentication
+  url: authentication/windmill-dev-authentication.yml
+- url: https://www.windmill.dev/blog/atom.xml
+  type: Blog
 - type: GitHubOrganization
   url: https://github.com/windmill-labs
 - type: LinkedIn
