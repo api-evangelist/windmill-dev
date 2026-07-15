@@ -368,6 +368,8 @@ apis:
     without long-lived secrets. OIDC token issuance is a Windmill Enterprise Edition
     feature.
 common:
+- type: AgenticAccess
+  url: agentic-access/windmill-dev-agentic-access.yml
 - type: DomainSecurity
   url: security/windmill-dev-domain-security.yml
 - type: Authentication
