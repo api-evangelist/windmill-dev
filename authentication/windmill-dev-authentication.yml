@@ -12,7 +12,7 @@ schemes:
   type: http
   scheme: bearer
   description: 'Bearer token created in the Windmill UI under account settings, passed as Authorization:
-    Bearer YOUR_TOKEN.'
+    Bearer [example key]'
   sources:
   - openapi/windmill-dev-openapi.yml
 - name: cookieAuth
