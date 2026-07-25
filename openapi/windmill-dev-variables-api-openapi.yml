@@ -1,0 +1,163 @@
+openapi: 3.0.3
+info:
+  title: Windmill Apps Variables API
+  description: 'Windmill is an open-source developer platform that turns scripts into internal tools, UIs, workflows, and cron jobs, executed by a distributed worker fleet. This is a representative subset of the Windmill REST API - the same surface used by the Windmill CLI and web UI. The authoritative, machine-generated specification is served live at GET /openapi.yaml (see https://app.windmill.dev/openapi.html); this document curates the most commonly used, stable endpoints for discovery.
+
+    Almost every resource is scoped under a workspace at the /w/{workspace} path prefix. Windmill runs as Windmill Cloud (base https://app.windmill.dev/api) or self-hosted (base http(s)://your-host/api). Requests are authenticated with a Bearer token created in the Windmill UI under account settings, or with a session cookie.'
+  version: 1.745.0
+  contact:
+    name: Windmill
+    url: https://www.windmill.dev
+  license:
+    name: AGPL-3.0 (community) / Windmill Enterprise License
+    url: https://github.com/windmill-labs/windmill/blob/main/LICENSE
+servers:
+- url: https://app.windmill.dev/api
+  description: Windmill Cloud
+- url: http://localhost:8000/api
+  description: Local development (self-hosted)
+security:
+- bearerAuth: []
+- cookieAuth: []
+tags:
+- name: Variables
+  description: Encrypted, path-scoped variables and secrets.
+paths:
+  /w/{workspace}/variables/list:
+    parameters:
+    - $ref: '#/components/parameters/Workspace'
+    get:
+      operationId: listVariables
+      tags:
+      - Variables
+      summary: List variables
+      description: Lists workspace variables (secret values are redacted).
+      responses:
+        '200':
+          description: A list of variables.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Variable'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/variables/create:
+    parameters:
+    - $ref: '#/components/parameters/Workspace'
+    post:
+      operationId: createVariable
+      tags:
+      - Variables
+      summary: Create a variable
+      description: Creates a workspace variable or secret.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Variable'
+      responses:
+        '201':
+          description: Created variable path.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/variables/get/{path}:
+    parameters:
+    - $ref: '#/components/parameters/Workspace'
+    - $ref: '#/components/parameters/Path'
+    get:
+      operationId: getVariable
+      tags:
+      - Variables
+      summary: Get a variable
+      description: Retrieves a variable by path, optionally decrypting the secret value.
+      responses:
+        '200':
+          description: The requested variable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Variable'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /w/{workspace}/variables/delete/{path}:
+    parameters:
+    - $ref: '#/components/parameters/Workspace'
+    - $ref: '#/components/parameters/Path'
+    delete:
+      operationId: deleteVariable
+      tags:
+      - Variables
+      summary: Delete a variable
+      description: Deletes a variable by path.
+      responses:
+        '200':
+          description: Deletion confirmation.
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  parameters:
+    Path:
+      name: path
+      in: path
+      required: true
+      description: The runnable/resource path (e.g. u/username/my_script or f/folder/name).
+      schema:
+        type: string
+    Workspace:
+      name: workspace
+      in: path
+      required: true
+      description: The workspace id (tenant) the resource belongs to.
+      schema:
+        type: string
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid Bearer token or session cookie.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Variable:
+      type: object
+      required:
+      - path
+      - value
+      properties:
+        path:
+          type: string
+        value:
+          type: string
+        is_secret:
+          type: boolean
+        description:
+          type: string
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            name:
+              type: string
+            message:
+              type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'Bearer token created in the Windmill UI under account settings, passed as Authorization: Bearer YOUR_TOKEN.'
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: token
+      description: Session cookie set by the Windmill web UI after login.

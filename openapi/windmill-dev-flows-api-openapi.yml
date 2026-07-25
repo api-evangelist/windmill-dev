@@ -1,0 +1,150 @@
+openapi: 3.0.3
+info:
+  title: Windmill Apps Flows API
+  description: 'Windmill is an open-source developer platform that turns scripts into internal tools, UIs, workflows, and cron jobs, executed by a distributed worker fleet. This is a representative subset of the Windmill REST API - the same surface used by the Windmill CLI and web UI. The authoritative, machine-generated specification is served live at GET /openapi.yaml (see https://app.windmill.dev/openapi.html); this document curates the most commonly used, stable endpoints for discovery.
+
+    Almost every resource is scoped under a workspace at the /w/{workspace} path prefix. Windmill runs as Windmill Cloud (base https://app.windmill.dev/api) or self-hosted (base http(s)://your-host/api). Requests are authenticated with a Bearer token created in the Windmill UI under account settings, or with a session cookie.'
+  version: 1.745.0
+  contact:
+    name: Windmill
+    url: https://www.windmill.dev
+  license:
+    name: AGPL-3.0 (community) / Windmill Enterprise License
+    url: https://github.com/windmill-labs/windmill/blob/main/LICENSE
+servers:
+- url: https://app.windmill.dev/api
+  description: Windmill Cloud
+- url: http://localhost:8000/api
+  description: Local development (self-hosted)
+security:
+- bearerAuth: []
+- cookieAuth: []
+tags:
+- name: Flows
+  description: DAG workflows composing scripts with branches, loops, and approvals.
+paths:
+  /w/{workspace}/flows/list:
+    parameters:
+    - $ref: '#/components/parameters/Workspace'
+    get:
+      operationId: listFlows
+      tags:
+      - Flows
+      summary: List flows
+      description: Lists flows in a workspace.
+      responses:
+        '200':
+          description: A list of flows.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Flow'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/flows/create:
+    parameters:
+    - $ref: '#/components/parameters/Workspace'
+    post:
+      operationId: createFlow
+      tags:
+      - Flows
+      summary: Create a flow
+      description: Creates a new flow.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Flow'
+      responses:
+        '201':
+          description: Created flow path.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/flows/get/p/{path}:
+    parameters:
+    - $ref: '#/components/parameters/Workspace'
+    - $ref: '#/components/parameters/Path'
+    get:
+      operationId: getFlowByPath
+      tags:
+      - Flows
+      summary: Get a flow by path
+      description: Retrieves a flow by its path.
+      responses:
+        '200':
+          description: The requested flow.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Flow'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  parameters:
+    Path:
+      name: path
+      in: path
+      required: true
+      description: The runnable/resource path (e.g. u/username/my_script or f/folder/name).
+      schema:
+        type: string
+    Workspace:
+      name: workspace
+      in: path
+      required: true
+      description: The workspace id (tenant) the resource belongs to.
+      schema:
+        type: string
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid Bearer token or session cookie.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Flow:
+      type: object
+      properties:
+        path:
+          type: string
+        summary:
+          type: string
+        description:
+          type: string
+        value:
+          type: object
+          description: The flow definition (modules, branches, loops).
+          additionalProperties: true
+        schema:
+          type: object
+          additionalProperties: true
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            name:
+              type: string
+            message:
+              type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'Bearer token created in the Windmill UI under account settings, passed as Authorization: Bearer YOUR_TOKEN.'
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: token
+      description: Session cookie set by the Windmill web UI after login.

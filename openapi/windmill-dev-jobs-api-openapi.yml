@@ -1,0 +1,266 @@
+openapi: 3.0.3
+info:
+  title: Windmill Apps Jobs API
+  description: 'Windmill is an open-source developer platform that turns scripts into internal tools, UIs, workflows, and cron jobs, executed by a distributed worker fleet. This is a representative subset of the Windmill REST API - the same surface used by the Windmill CLI and web UI. The authoritative, machine-generated specification is served live at GET /openapi.yaml (see https://app.windmill.dev/openapi.html); this document curates the most commonly used, stable endpoints for discovery.
+
+    Almost every resource is scoped under a workspace at the /w/{workspace} path prefix. Windmill runs as Windmill Cloud (base https://app.windmill.dev/api) or self-hosted (base http(s)://your-host/api). Requests are authenticated with a Bearer token created in the Windmill UI under account settings, or with a session cookie.'
+  version: 1.745.0
+  contact:
+    name: Windmill
+    url: https://www.windmill.dev
+  license:
+    name: AGPL-3.0 (community) / Windmill Enterprise License
+    url: https://github.com/windmill-labs/windmill/blob/main/LICENSE
+servers:
+- url: https://app.windmill.dev/api
+  description: Windmill Cloud
+- url: http://localhost:8000/api
+  description: Local development (self-hosted)
+security:
+- bearerAuth: []
+- cookieAuth: []
+tags:
+- name: Jobs
+  description: Execution of scripts and flows - run, inspect, and cancel jobs.
+paths:
+  /w/{workspace}/jobs/run/p/{path}:
+    parameters:
+    - $ref: '#/components/parameters/Workspace'
+    - $ref: '#/components/parameters/Path'
+    post:
+      operationId: runScriptByPath
+      tags:
+      - Jobs
+      summary: Run a script by path
+      description: Enqueues a job to run the script at the given path with the supplied arguments and returns the new job UUID (fire and forget).
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '201':
+          description: The created job UUID.
+          content:
+            application/json:
+              schema:
+                type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/jobs/run_wait_result/p/{path}:
+    parameters:
+    - $ref: '#/components/parameters/Workspace'
+    - $ref: '#/components/parameters/Path'
+    post:
+      operationId: runScriptByPathAndWaitResult
+      tags:
+      - Jobs
+      summary: Run a script by path and wait for the result
+      description: Runs the script at the given path synchronously and returns its result once the job completes.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '200':
+          description: The job result.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/jobs/run/f/{path}:
+    parameters:
+    - $ref: '#/components/parameters/Workspace'
+    - $ref: '#/components/parameters/Path'
+    post:
+      operationId: runFlowByPath
+      tags:
+      - Jobs
+      summary: Run a flow by path
+      description: Enqueues a job to run the flow at the given path.
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: true
+      responses:
+        '201':
+          description: The created job UUID.
+          content:
+            application/json:
+              schema:
+                type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/jobs/list:
+    parameters:
+    - $ref: '#/components/parameters/Workspace'
+    get:
+      operationId: listJobs
+      tags:
+      - Jobs
+      summary: List jobs
+      description: Lists queued, running, and completed jobs in a workspace.
+      responses:
+        '200':
+          description: A list of jobs.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Job'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/jobs_u/get/{id}:
+    parameters:
+    - $ref: '#/components/parameters/Workspace'
+    - $ref: '#/components/parameters/JobId'
+    get:
+      operationId: getJob
+      tags:
+      - Jobs
+      summary: Get a job
+      description: Retrieves a job (queued or completed) by its UUID.
+      responses:
+        '200':
+          description: The requested job.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /w/{workspace}/jobs_u/completed/get_result/{id}:
+    parameters:
+    - $ref: '#/components/parameters/Workspace'
+    - $ref: '#/components/parameters/JobId'
+    get:
+      operationId: getCompletedJobResult
+      tags:
+      - Jobs
+      summary: Get a completed job result
+      description: Retrieves the result payload of a completed job.
+      responses:
+        '200':
+          description: The job result.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /w/{workspace}/jobs_u/queue/cancel/{id}:
+    parameters:
+    - $ref: '#/components/parameters/Workspace'
+    - $ref: '#/components/parameters/JobId'
+    post:
+      operationId: cancelJob
+      tags:
+      - Jobs
+      summary: Cancel a job
+      description: Cancels a queued or running job by its UUID.
+      responses:
+        '200':
+          description: Cancellation confirmation.
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  parameters:
+    JobId:
+      name: id
+      in: path
+      required: true
+      description: The job UUID.
+      schema:
+        type: string
+        format: uuid
+    Path:
+      name: path
+      in: path
+      required: true
+      description: The runnable/resource path (e.g. u/username/my_script or f/folder/name).
+      schema:
+        type: string
+    Workspace:
+      name: workspace
+      in: path
+      required: true
+      description: The workspace id (tenant) the resource belongs to.
+      schema:
+        type: string
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid Bearer token or session cookie.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Job:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        script_path:
+          type: string
+        job_kind:
+          type: string
+          enum:
+          - script
+          - flow
+          - preview
+          - dependencies
+        success:
+          type: boolean
+        running:
+          type: boolean
+        canceled:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        started_at:
+          type: string
+          format: date-time
+        result:
+          type: object
+          additionalProperties: true
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            name:
+              type: string
+            message:
+              type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'Bearer token created in the Windmill UI under account settings, passed as Authorization: Bearer YOUR_TOKEN.'
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: token
+      description: Session cookie set by the Windmill web UI after login.

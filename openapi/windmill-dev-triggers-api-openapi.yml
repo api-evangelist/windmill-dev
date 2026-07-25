@@ -1,0 +1,179 @@
+openapi: 3.0.3
+info:
+  title: Windmill Apps Triggers API
+  description: 'Windmill is an open-source developer platform that turns scripts into internal tools, UIs, workflows, and cron jobs, executed by a distributed worker fleet. This is a representative subset of the Windmill REST API - the same surface used by the Windmill CLI and web UI. The authoritative, machine-generated specification is served live at GET /openapi.yaml (see https://app.windmill.dev/openapi.html); this document curates the most commonly used, stable endpoints for discovery.
+
+    Almost every resource is scoped under a workspace at the /w/{workspace} path prefix. Windmill runs as Windmill Cloud (base https://app.windmill.dev/api) or self-hosted (base http(s)://your-host/api). Requests are authenticated with a Bearer token created in the Windmill UI under account settings, or with a session cookie.'
+  version: 1.745.0
+  contact:
+    name: Windmill
+    url: https://www.windmill.dev
+  license:
+    name: AGPL-3.0 (community) / Windmill Enterprise License
+    url: https://github.com/windmill-labs/windmill/blob/main/LICENSE
+servers:
+- url: https://app.windmill.dev/api
+  description: Windmill Cloud
+- url: http://localhost:8000/api
+  description: Local development (self-hosted)
+security:
+- bearerAuth: []
+- cookieAuth: []
+tags:
+- name: Triggers
+  description: Event triggers - HTTP, WebSocket, Kafka, NATS, Postgres, SQS, MQTT.
+paths:
+  /w/{workspace}/http_triggers/list:
+    parameters:
+    - $ref: '#/components/parameters/Workspace'
+    get:
+      operationId: listHttpTriggers
+      tags:
+      - Triggers
+      summary: List HTTP triggers
+      description: Lists HTTP route triggers that invoke scripts or flows on inbound requests.
+      responses:
+        '200':
+          description: A list of HTTP triggers.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Trigger'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/websocket_triggers/list:
+    parameters:
+    - $ref: '#/components/parameters/Workspace'
+    get:
+      operationId: listWebsocketTriggers
+      tags:
+      - Triggers
+      summary: List WebSocket triggers
+      description: Lists WebSocket triggers. A WebSocket trigger has Windmill connect OUT to an external WebSocket server (ws:// or wss://) and run a runnable when a message is received. This is an outbound consumer, not a Windmill-hosted WebSocket API.
+      responses:
+        '200':
+          description: A list of WebSocket triggers.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Trigger'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/websocket_triggers/create:
+    parameters:
+    - $ref: '#/components/parameters/Workspace'
+    post:
+      operationId: createWebsocketTrigger
+      tags:
+      - Triggers
+      summary: Create a WebSocket trigger
+      description: Creates a WebSocket trigger that connects to an external WebSocket server URL and runs a script or flow for each received message.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Trigger'
+      responses:
+        '201':
+          description: Creation confirmation.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/kafka_triggers/list:
+    parameters:
+    - $ref: '#/components/parameters/Workspace'
+    get:
+      operationId: listKafkaTriggers
+      tags:
+      - Triggers
+      summary: List Kafka triggers
+      description: Lists Kafka triggers that consume topics and run runnables per message.
+      responses:
+        '200':
+          description: A list of Kafka triggers.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Trigger'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/postgres_triggers/list:
+    parameters:
+    - $ref: '#/components/parameters/Workspace'
+    get:
+      operationId: listPostgresTriggers
+      tags:
+      - Triggers
+      summary: List Postgres triggers
+      description: Lists Postgres logical-replication triggers that run runnables on row changes.
+      responses:
+        '200':
+          description: A list of Postgres triggers.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Trigger'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+components:
+  responses:
+    Unauthorized:
+      description: Missing or invalid Bearer token or session cookie.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Trigger:
+      type: object
+      properties:
+        path:
+          type: string
+        script_path:
+          type: string
+        is_flow:
+          type: boolean
+        enabled:
+          type: boolean
+        url:
+          type: string
+          description: For a WebSocket trigger, the external WebSocket server URL Windmill connects to.
+        extra_config:
+          type: object
+          additionalProperties: true
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            name:
+              type: string
+            message:
+              type: string
+  parameters:
+    Workspace:
+      name: workspace
+      in: path
+      required: true
+      description: The workspace id (tenant) the resource belongs to.
+      schema:
+        type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'Bearer token created in the Windmill UI under account settings, passed as Authorization: Bearer YOUR_TOKEN.'
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: token
+      description: Session cookie set by the Windmill web UI after login.

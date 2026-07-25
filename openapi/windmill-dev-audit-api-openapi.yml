@@ -1,0 +1,133 @@
+openapi: 3.0.3
+info:
+  title: Windmill Apps Audit API
+  description: 'Windmill is an open-source developer platform that turns scripts into internal tools, UIs, workflows, and cron jobs, executed by a distributed worker fleet. This is a representative subset of the Windmill REST API - the same surface used by the Windmill CLI and web UI. The authoritative, machine-generated specification is served live at GET /openapi.yaml (see https://app.windmill.dev/openapi.html); this document curates the most commonly used, stable endpoints for discovery.
+
+    Almost every resource is scoped under a workspace at the /w/{workspace} path prefix. Windmill runs as Windmill Cloud (base https://app.windmill.dev/api) or self-hosted (base http(s)://your-host/api). Requests are authenticated with a Bearer token created in the Windmill UI under account settings, or with a session cookie.'
+  version: 1.745.0
+  contact:
+    name: Windmill
+    url: https://www.windmill.dev
+  license:
+    name: AGPL-3.0 (community) / Windmill Enterprise License
+    url: https://github.com/windmill-labs/windmill/blob/main/LICENSE
+servers:
+- url: https://app.windmill.dev/api
+  description: Windmill Cloud
+- url: http://localhost:8000/api
+  description: Local development (self-hosted)
+security:
+- bearerAuth: []
+- cookieAuth: []
+tags:
+- name: Audit
+  description: Audit log entries (Enterprise Edition).
+paths:
+  /w/{workspace}/audit/list:
+    parameters:
+    - $ref: '#/components/parameters/Workspace'
+    get:
+      operationId: listAuditLogs
+      tags:
+      - Audit
+      summary: List audit logs
+      description: Lists audit log entries for a workspace (admin only, Enterprise Edition).
+      responses:
+        '200':
+          description: A list of audit log entries.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AuditLog'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /w/{workspace}/audit/get/{id}:
+    parameters:
+    - $ref: '#/components/parameters/Workspace'
+    - name: id
+      in: path
+      required: true
+      description: The audit log entry id.
+      schema:
+        type: integer
+    get:
+      operationId: getAuditLog
+      tags:
+      - Audit
+      summary: Get an audit log entry
+      description: Retrieves a single audit log entry by id.
+      responses:
+        '200':
+          description: The requested audit log entry.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuditLog'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  responses:
+    NotFound:
+      description: The requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing or invalid Bearer token or session cookie.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    AuditLog:
+      type: object
+      properties:
+        id:
+          type: integer
+        timestamp:
+          type: string
+          format: date-time
+        username:
+          type: string
+        operation:
+          type: string
+        action_kind:
+          type: string
+          enum:
+          - Create
+          - Update
+          - Delete
+          - Execute
+        resource:
+          type: string
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            name:
+              type: string
+            message:
+              type: string
+  parameters:
+    Workspace:
+      name: workspace
+      in: path
+      required: true
+      description: The workspace id (tenant) the resource belongs to.
+      schema:
+        type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'Bearer token created in the Windmill UI under account settings, passed as Authorization: Bearer YOUR_TOKEN.'
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: token
+      description: Session cookie set by the Windmill web UI after login.
