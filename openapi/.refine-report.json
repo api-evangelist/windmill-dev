@@ -1,0 +1,42 @@
+{
+  "provider": "windmill-dev",
+  "sources": [
+    "windmill-dev-apps-api-openapi.yml",
+    "windmill-dev-audit-api-openapi.yml",
+    "windmill-dev-flows-api-openapi.yml",
+    "windmill-dev-folders-api-openapi.yml",
+    "windmill-dev-groups-api-openapi.yml",
+    "windmill-dev-jobs-api-openapi.yml",
+    "windmill-dev-oidc-api-openapi.yml",
+    "windmill-dev-resources-api-openapi.yml",
+    "windmill-dev-schedules-api-openapi.yml",
+    "windmill-dev-scripts-api-openapi.yml",
+    "windmill-dev-triggers-api-openapi.yml",
+    "windmill-dev-users-api-openapi.yml",
+    "windmill-dev-variables-api-openapi.yml",
+    "windmill-dev-workers-api-openapi.yml",
+    "windmill-dev-workspaces-api-openapi.yml"
+  ],
+  "outputs": [
+    "windmill-dev-apps-api-openapi.yml",
+    "windmill-dev-audit-api-openapi.yml",
+    "windmill-dev-flows-api-openapi.yml",
+    "windmill-dev-folders-api-openapi.yml",
+    "windmill-dev-groups-api-openapi.yml",
+    "windmill-dev-jobs-api-openapi.yml",
+    "windmill-dev-oidc-api-openapi.yml",
+    "windmill-dev-resources-api-openapi.yml",
+    "windmill-dev-schedules-api-openapi.yml",
+    "windmill-dev-scripts-api-openapi.yml",
+    "windmill-dev-triggers-api-openapi.yml",
+    "windmill-dev-users-api-openapi.yml",
+    "windmill-dev-variables-api-openapi.yml",
+    "windmill-dev-workers-api-openapi.yml",
+    "windmill-dev-workspaces-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
