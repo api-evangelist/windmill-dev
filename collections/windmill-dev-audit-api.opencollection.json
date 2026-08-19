@@ -1,0 +1,68 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Windmill Apps Audit API",
+    "version": "1.745.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Audit",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List audit logs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.windmill.dev/api/w/:workspace/audit/list",
+            "params": [
+              {
+                "name": "workspace",
+                "value": "",
+                "type": "path",
+                "description": "The workspace id (tenant) the resource belongs to."
+              }
+            ]
+          },
+          "docs": "Lists audit log entries for a workspace (admin only, Enterprise Edition)."
+        },
+        {
+          "info": {
+            "name": "Get an audit log entry",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.windmill.dev/api/w/:workspace/audit/get/:id",
+            "params": [
+              {
+                "name": "workspace",
+                "value": "",
+                "type": "path",
+                "description": "The workspace id (tenant) the resource belongs to."
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The audit log entry id."
+              }
+            ]
+          },
+          "docs": "Retrieves a single audit log entry by id."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

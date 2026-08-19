@@ -1,0 +1,54 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Windmill Apps Workers API",
+    "version": "1.745.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Workers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List workers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.windmill.dev/api/workers/list"
+          },
+          "docs": "Lists active workers in the fleet with their worker group and tags."
+        },
+        {
+          "info": {
+            "name": "Get queue count",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.windmill.dev/api/w/:workspace/queue/count",
+            "params": [
+              {
+                "name": "workspace",
+                "value": "",
+                "type": "path",
+                "description": "The workspace id (tenant) the resource belongs to."
+              }
+            ]
+          },
+          "docs": "Returns the count of jobs currently queued in a workspace."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

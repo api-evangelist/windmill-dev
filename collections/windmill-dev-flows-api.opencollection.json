@@ -1,0 +1,91 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Windmill Apps Flows API",
+    "version": "1.745.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Flows",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List flows",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.windmill.dev/api/w/:workspace/flows/list",
+            "params": [
+              {
+                "name": "workspace",
+                "value": "",
+                "type": "path",
+                "description": "The workspace id (tenant) the resource belongs to."
+              }
+            ]
+          },
+          "docs": "Lists flows in a workspace."
+        },
+        {
+          "info": {
+            "name": "Create a flow",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.windmill.dev/api/w/:workspace/flows/create",
+            "params": [
+              {
+                "name": "workspace",
+                "value": "",
+                "type": "path",
+                "description": "The workspace id (tenant) the resource belongs to."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new flow."
+        },
+        {
+          "info": {
+            "name": "Get a flow by path",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.windmill.dev/api/w/:workspace/flows/get/p/:path",
+            "params": [
+              {
+                "name": "workspace",
+                "value": "",
+                "type": "path",
+                "description": "The workspace id (tenant) the resource belongs to."
+              },
+              {
+                "name": "path",
+                "value": "",
+                "type": "path",
+                "description": "The runnable/resource path (e.g. u/username/my_script or f/folder/name)."
+              }
+            ]
+          },
+          "docs": "Retrieves a flow by its path."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

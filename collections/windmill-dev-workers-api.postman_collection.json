@@ -1,0 +1,319 @@
+{
+  "item": [
+    {
+      "id": "ddf801ad-c99f-4f9e-b3b6-895d28dd40d9",
+      "name": "Workers",
+      "description": {
+        "content": "The distributed worker fleet executing jobs.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "cbf0ef86-49ff-47de-88fa-700c33d9c1c6",
+          "name": "List workers",
+          "request": {
+            "name": "List workers",
+            "description": {
+              "content": "Lists active workers in the fleet with their worker group and tags.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "workers",
+                "list"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "54f06813-0fc8-42e0-a227-072327b9a054",
+              "name": "A list of workers.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workers",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"worker\": \"string\",\n    \"worker_instance\": \"string\",\n    \"worker_group\": \"string\",\n    \"last_ping\": 5276,\n    \"jobs_executed\": 636,\n    \"custom_tags\": [\n      \"string\",\n      \"string\"\n    ]\n  },\n  {\n    \"worker\": \"string\",\n    \"worker_instance\": \"string\",\n    \"worker_group\": \"string\",\n    \"last_ping\": 1850,\n    \"jobs_executed\": 5436,\n    \"custom_tags\": [\n      \"string\",\n      \"string\"\n    ]\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "76f6b95e-c356-449a-b2c7-4b267cd86789",
+              "name": "Missing or invalid Bearer token or session cookie.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "workers",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"name\": \"string\",\n    \"message\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "63ab0dc6-a824-4e7c-9880-99271f4e6529",
+          "name": "Get queue count",
+          "request": {
+            "name": "Get queue count",
+            "description": {
+              "content": "Returns the count of jobs currently queued in a workspace.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "w",
+                ":workspace",
+                "queue",
+                "count"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "workspace",
+                  "description": "(Required) The workspace id (tenant) the resource belongs to."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "42d2c9f7-5b67-486b-be51-ab4c0ed119f7",
+              "name": "Queue counts.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "w",
+                    ":workspace",
+                    "queue",
+                    "count"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace",
+                      "description": "(Required) The workspace id (tenant) the resource belongs to."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"database_length\": 3571\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "06bbfd41-032c-494c-a6cb-7c43dfac7411",
+              "name": "Missing or invalid Bearer token or session cookie.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "w",
+                    ":workspace",
+                    "queue",
+                    "count"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace",
+                      "description": "(Required) The workspace id (tenant) the resource belongs to."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"name\": \"string\",\n    \"message\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://app.windmill.dev/api",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "b5539527-cd2a-42bf-9f9b-56992fcf07da",
+    "name": "Windmill Apps Workers API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Windmill is an open-source developer platform that turns scripts into internal tools, UIs, workflows, and cron jobs, executed by a distributed worker fleet. This is a representative subset of the Windmill REST API - the same surface used by the Windmill CLI and web UI. The authoritative, machine-generated specification is served live at GET /openapi.yaml (see https://app.windmill.dev/openapi.html); this document curates the most commonly used, stable endpoints for discovery.\nAlmost every resource is scoped under a workspace at the /w/{workspace} path prefix. Windmill runs as Windmill Cloud (base https://app.windmill.dev/api) or self-hosted (base http(s)://your-host/api). Requests are authenticated with a Bearer token created in the Windmill UI under account settings, or with a session cookie.\n\nContact Support:\n Name: Windmill",
+      "type": "text/plain"
+    }
+  }
+}

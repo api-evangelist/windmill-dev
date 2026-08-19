@@ -1,0 +1,85 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Windmill Apps Resources API",
+    "version": "1.745.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Resources",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List resources",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.windmill.dev/api/w/:workspace/resources/list",
+            "params": [
+              {
+                "name": "workspace",
+                "value": "",
+                "type": "path",
+                "description": "The workspace id (tenant) the resource belongs to."
+              }
+            ]
+          },
+          "docs": "Lists typed resource objects in a workspace."
+        },
+        {
+          "info": {
+            "name": "Create a resource",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.windmill.dev/api/w/:workspace/resources/create",
+            "params": [
+              {
+                "name": "workspace",
+                "value": "",
+                "type": "path",
+                "description": "The workspace id (tenant) the resource belongs to."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a typed resource object."
+        },
+        {
+          "info": {
+            "name": "List resource types",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.windmill.dev/api/w/:workspace/resources/type/list",
+            "params": [
+              {
+                "name": "workspace",
+                "value": "",
+                "type": "path",
+                "description": "The workspace id (tenant) the resource belongs to."
+              }
+            ]
+          },
+          "docs": "Lists the resource types (schemas) available in a workspace."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

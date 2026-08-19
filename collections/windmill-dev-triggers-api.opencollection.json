@@ -1,0 +1,123 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Windmill Apps Triggers API",
+    "version": "1.745.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Triggers",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List HTTP triggers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.windmill.dev/api/w/:workspace/http_triggers/list",
+            "params": [
+              {
+                "name": "workspace",
+                "value": "",
+                "type": "path",
+                "description": "The workspace id (tenant) the resource belongs to."
+              }
+            ]
+          },
+          "docs": "Lists HTTP route triggers that invoke scripts or flows on inbound requests."
+        },
+        {
+          "info": {
+            "name": "List WebSocket triggers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.windmill.dev/api/w/:workspace/websocket_triggers/list",
+            "params": [
+              {
+                "name": "workspace",
+                "value": "",
+                "type": "path",
+                "description": "The workspace id (tenant) the resource belongs to."
+              }
+            ]
+          },
+          "docs": "Lists WebSocket triggers. A WebSocket trigger has Windmill connect OUT to an external WebSocket server (ws:// or wss://) and run a runnable when a message is received. This is an outbound consumer, not a Windmill-hosted WebSocket API."
+        },
+        {
+          "info": {
+            "name": "Create a WebSocket trigger",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.windmill.dev/api/w/:workspace/websocket_triggers/create",
+            "params": [
+              {
+                "name": "workspace",
+                "value": "",
+                "type": "path",
+                "description": "The workspace id (tenant) the resource belongs to."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a WebSocket trigger that connects to an external WebSocket server URL and runs a script or flow for each received message."
+        },
+        {
+          "info": {
+            "name": "List Kafka triggers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.windmill.dev/api/w/:workspace/kafka_triggers/list",
+            "params": [
+              {
+                "name": "workspace",
+                "value": "",
+                "type": "path",
+                "description": "The workspace id (tenant) the resource belongs to."
+              }
+            ]
+          },
+          "docs": "Lists Kafka triggers that consume topics and run runnables per message."
+        },
+        {
+          "info": {
+            "name": "List Postgres triggers",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.windmill.dev/api/w/:workspace/postgres_triggers/list",
+            "params": [
+              {
+                "name": "workspace",
+                "value": "",
+                "type": "path",
+                "description": "The workspace id (tenant) the resource belongs to."
+              }
+            ]
+          },
+          "docs": "Lists Postgres logical-replication triggers that run runnables on row changes."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

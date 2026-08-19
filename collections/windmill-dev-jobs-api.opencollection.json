@@ -1,0 +1,205 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Windmill Apps Jobs API",
+    "version": "1.745.0"
+  },
+  "request": {
+    "auth": {
+      "type": "bearer",
+      "token": "{{bearerToken}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Jobs",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Run a script by path",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.windmill.dev/api/w/:workspace/jobs/run/p/:path",
+            "params": [
+              {
+                "name": "workspace",
+                "value": "",
+                "type": "path",
+                "description": "The workspace id (tenant) the resource belongs to."
+              },
+              {
+                "name": "path",
+                "value": "",
+                "type": "path",
+                "description": "The runnable/resource path (e.g. u/username/my_script or f/folder/name)."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Enqueues a job to run the script at the given path with the supplied arguments and returns the new job UUID (fire and forget)."
+        },
+        {
+          "info": {
+            "name": "Run a script by path and wait for the result",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.windmill.dev/api/w/:workspace/jobs/run_wait_result/p/:path",
+            "params": [
+              {
+                "name": "workspace",
+                "value": "",
+                "type": "path",
+                "description": "The workspace id (tenant) the resource belongs to."
+              },
+              {
+                "name": "path",
+                "value": "",
+                "type": "path",
+                "description": "The runnable/resource path (e.g. u/username/my_script or f/folder/name)."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Runs the script at the given path synchronously and returns its result once the job completes."
+        },
+        {
+          "info": {
+            "name": "Run a flow by path",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.windmill.dev/api/w/:workspace/jobs/run/f/:path",
+            "params": [
+              {
+                "name": "workspace",
+                "value": "",
+                "type": "path",
+                "description": "The workspace id (tenant) the resource belongs to."
+              },
+              {
+                "name": "path",
+                "value": "",
+                "type": "path",
+                "description": "The runnable/resource path (e.g. u/username/my_script or f/folder/name)."
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Enqueues a job to run the flow at the given path."
+        },
+        {
+          "info": {
+            "name": "List jobs",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.windmill.dev/api/w/:workspace/jobs/list",
+            "params": [
+              {
+                "name": "workspace",
+                "value": "",
+                "type": "path",
+                "description": "The workspace id (tenant) the resource belongs to."
+              }
+            ]
+          },
+          "docs": "Lists queued, running, and completed jobs in a workspace."
+        },
+        {
+          "info": {
+            "name": "Get a job",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.windmill.dev/api/w/:workspace/jobs_u/get/:id",
+            "params": [
+              {
+                "name": "workspace",
+                "value": "",
+                "type": "path",
+                "description": "The workspace id (tenant) the resource belongs to."
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The job UUID."
+              }
+            ]
+          },
+          "docs": "Retrieves a job (queued or completed) by its UUID."
+        },
+        {
+          "info": {
+            "name": "Get a completed job result",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://app.windmill.dev/api/w/:workspace/jobs_u/completed/get_result/:id",
+            "params": [
+              {
+                "name": "workspace",
+                "value": "",
+                "type": "path",
+                "description": "The workspace id (tenant) the resource belongs to."
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The job UUID."
+              }
+            ]
+          },
+          "docs": "Retrieves the result payload of a completed job."
+        },
+        {
+          "info": {
+            "name": "Cancel a job",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://app.windmill.dev/api/w/:workspace/jobs_u/queue/cancel/:id",
+            "params": [
+              {
+                "name": "workspace",
+                "value": "",
+                "type": "path",
+                "description": "The workspace id (tenant) the resource belongs to."
+              },
+              {
+                "name": "id",
+                "value": "",
+                "type": "path",
+                "description": "The job UUID."
+              }
+            ]
+          },
+          "docs": "Cancels a queued or running job by its UUID."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

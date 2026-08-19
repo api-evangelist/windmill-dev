@@ -1,0 +1,373 @@
+{
+  "item": [
+    {
+      "id": "b10cf584-1910-4db2-9f7b-f47f023a492f",
+      "name": "Audit",
+      "description": {
+        "content": "Audit log entries (Enterprise Edition).",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "ba52ec86-d1c2-4e72-bace-707f2d50a6b7",
+          "name": "List audit logs",
+          "request": {
+            "name": "List audit logs",
+            "description": {
+              "content": "Lists audit log entries for a workspace (admin only, Enterprise Edition).",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "w",
+                ":workspace",
+                "audit",
+                "list"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "workspace",
+                  "description": "(Required) The workspace id (tenant) the resource belongs to."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "10a5f327-eb28-40fb-8220-5d221732a699",
+              "name": "A list of audit log entries.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "w",
+                    ":workspace",
+                    "audit",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace",
+                      "description": "(Required) The workspace id (tenant) the resource belongs to."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": 244,\n    \"timestamp\": \"1947-08-21T21:56:14.083Z\",\n    \"username\": \"string\",\n    \"operation\": \"string\",\n    \"action_kind\": \"Update\",\n    \"resource\": \"string\"\n  },\n  {\n    \"id\": 365,\n    \"timestamp\": \"2003-07-31T19:52:04.622Z\",\n    \"username\": \"string\",\n    \"operation\": \"string\",\n    \"action_kind\": \"Execute\",\n    \"resource\": \"string\"\n  }\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1156700e-fa7f-42e4-978b-03cf8afc9abf",
+              "name": "Missing or invalid Bearer token or session cookie.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "w",
+                    ":workspace",
+                    "audit",
+                    "list"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace",
+                      "description": "(Required) The workspace id (tenant) the resource belongs to."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"name\": \"string\",\n    \"message\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "fb374445-c6ec-4696-a38a-3fd956dc9855",
+          "name": "Get an audit log entry",
+          "request": {
+            "name": "Get an audit log entry",
+            "description": {
+              "content": "Retrieves a single audit log entry by id.",
+              "type": "text/plain"
+            },
+            "url": {
+              "path": [
+                "w",
+                ":workspace",
+                "audit",
+                "get",
+                ":id"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "workspace",
+                  "description": "(Required) The workspace id (tenant) the resource belongs to."
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<integer>",
+                  "key": "id",
+                  "description": "(Required) The audit log entry id."
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "83e1f556-7827-4c27-b003-1fd95674703c",
+              "name": "The requested audit log entry.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "w",
+                    ":workspace",
+                    "audit",
+                    "get",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace",
+                      "description": "(Required) The workspace id (tenant) the resource belongs to."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) The audit log entry id."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 9152,\n  \"timestamp\": \"1978-06-02T21:33:24.240Z\",\n  \"username\": \"string\",\n  \"operation\": \"string\",\n  \"action_kind\": \"Execute\",\n  \"resource\": \"string\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "f6659455-f4f5-499e-8988-45e9770a0c39",
+              "name": "The requested resource was not found.",
+              "originalRequest": {
+                "url": {
+                  "path": [
+                    "w",
+                    ":workspace",
+                    "audit",
+                    "get",
+                    ":id"
+                  ],
+                  "host": [
+                    "{{baseUrl}}"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<string>",
+                      "key": "workspace",
+                      "description": "(Required) The workspace id (tenant) the resource belongs to."
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<integer>",
+                      "key": "id",
+                      "description": "(Required) The audit log entry id."
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: bearer",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "Bearer <token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"name\": \"string\",\n    \"message\": \"string\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://app.windmill.dev/api",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{bearerToken}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "d34922d9-f2bf-4536-a267-52a6cdec948d",
+    "name": "Windmill Apps Audit API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "Windmill is an open-source developer platform that turns scripts into internal tools, UIs, workflows, and cron jobs, executed by a distributed worker fleet. This is a representative subset of the Windmill REST API - the same surface used by the Windmill CLI and web UI. The authoritative, machine-generated specification is served live at GET /openapi.yaml (see https://app.windmill.dev/openapi.html); this document curates the most commonly used, stable endpoints for discovery.\nAlmost every resource is scoped under a workspace at the /w/{workspace} path prefix. Windmill runs as Windmill Cloud (base https://app.windmill.dev/api) or self-hosted (base http(s)://your-host/api). Requests are authenticated with a Bearer token created in the Windmill UI under account settings, or with a session cookie.\n\nContact Support:\n Name: Windmill",
+      "type": "text/plain"
+    }
+  }
+}
