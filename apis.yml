@@ -9,6 +9,18 @@ description: Windmill is an open-source developer platform that turns scripts (P
   schedules, variables, resources, triggers - is addressable over a single REST API
   (base https://app.windmill.dev/api on Cloud, or /api self-hosted), authenticated
   with a Bearer token, and is the same surface the Windmill CLI and web UI use.
+deliveryModel:
+  model: saas
+  open_source: false
+  commercial: true
+  callable_host: true
+  label: Hosted service · you call their endpoint
+  confidence: high
+  source:
+  - openapi
+  - pricing
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: freemium
   onboarding: self-serve
