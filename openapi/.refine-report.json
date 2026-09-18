@@ -1,21 +1,7 @@
 {
   "provider": "windmill-dev",
   "sources": [
-    "windmill-dev-apps-api-openapi.yml",
-    "windmill-dev-audit-api-openapi.yml",
-    "windmill-dev-flows-api-openapi.yml",
-    "windmill-dev-folders-api-openapi.yml",
-    "windmill-dev-groups-api-openapi.yml",
-    "windmill-dev-jobs-api-openapi.yml",
-    "windmill-dev-oidc-api-openapi.yml",
-    "windmill-dev-resources-api-openapi.yml",
-    "windmill-dev-schedules-api-openapi.yml",
-    "windmill-dev-scripts-api-openapi.yml",
-    "windmill-dev-triggers-api-openapi.yml",
-    "windmill-dev-users-api-openapi.yml",
-    "windmill-dev-variables-api-openapi.yml",
-    "windmill-dev-workers-api-openapi.yml",
-    "windmill-dev-workspaces-api-openapi.yml"
+    "_original/windmill-dev-openapi.yml"
   ],
   "outputs": [
     "windmill-dev-apps-api-openapi.yml",
@@ -37,6 +23,26 @@
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "windmill-dev-openapi.yml: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "windmill-dev-apps-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "windmill-dev-audit-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "windmill-dev-flows-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "windmill-dev-folders-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "windmill-dev-groups-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "windmill-dev-jobs-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "windmill-dev-oidc-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "windmill-dev-resources-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "windmill-dev-schedules-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "windmill-dev-scripts-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "windmill-dev-triggers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "windmill-dev-users-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "windmill-dev-variables-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "windmill-dev-workers-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "windmill-dev-workspaces-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

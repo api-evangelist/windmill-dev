@@ -154,6 +154,8 @@ apis:
   humanURL: https://www.windmill.dev/docs/getting_started/scripts_quickstart
   baseURL: https://app.windmill.dev/api
   tags:
+  - Flow
+  tags_raw:
   - Flows
   properties:
   - type: OpenAPI
@@ -434,6 +436,8 @@ apis:
   humanURL: https://www.windmill.dev/docs/getting_started/scripts_quickstart
   baseURL: https://app.windmill.dev/api
   tags:
+  - Schedule
+  tags_raw:
   - Schedules
   properties:
   - type: OpenAPI
@@ -712,6 +716,8 @@ apis:
   humanURL: https://www.windmill.dev/docs/getting_started/scripts_quickstart
   baseURL: https://app.windmill.dev/api
   tags:
+  - Workspace
+  tags_raw:
   - Workspaces
   properties:
   - type: OpenAPI

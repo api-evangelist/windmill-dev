@@ -1,9 +1,7 @@
-openapi: 3.0.3
+openapi: 3.2.0
 info:
-  title: Windmill Apps Workspaces API
-  description: 'Windmill is an open-source developer platform that turns scripts into internal tools, UIs, workflows, and cron jobs, executed by a distributed worker fleet. This is a representative subset of the Windmill REST API - the same surface used by the Windmill CLI and web UI. The authoritative, machine-generated specification is served live at GET /openapi.yaml (see https://app.windmill.dev/openapi.html); this document curates the most commonly used, stable endpoints for discovery.
-
-    Almost every resource is scoped under a workspace at the /w/{workspace} path prefix. Windmill runs as Windmill Cloud (base https://app.windmill.dev/api) or self-hosted (base http(s)://your-host/api). Requests are authenticated with a Bearer token created in the Windmill UI under account settings, or with a session cookie.'
+  title: Windmill Workspaces API
+  description: Windmill is an open-source developer platform that turns scripts into internal tools, UIs, workflows, and cron jobs, executed by a distributed worker fleet.
   version: 1.745.0
   contact:
     name: Windmill
@@ -94,23 +92,15 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 components:
-  responses:
-    Unauthorized:
-      description: Missing or invalid Bearer token or session cookie.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-  schemas:
+  parameters:
     Workspace:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        owner:
-          type: string
+      name: workspace
+      in: path
+      required: true
+      description: The workspace id (tenant) the resource belongs to.
+      schema:
+        type: string
+  schemas:
     Error:
       type: object
       properties:
@@ -121,14 +111,22 @@ components:
               type: string
             message:
               type: string
-  parameters:
     Workspace:
-      name: workspace
-      in: path
-      required: true
-      description: The workspace id (tenant) the resource belongs to.
-      schema:
-        type: string
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        owner:
+          type: string
+  responses:
+    Unauthorized:
+      description: Missing or invalid Bearer token or session cookie.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   securitySchemes:
     bearerAuth:
       type: http
